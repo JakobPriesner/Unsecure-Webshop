@@ -1,10 +1,8 @@
 import {Component, ElementRef, OnInit, SecurityContext, ViewChild} from "@angular/core";
-import {Address, User} from "../../data-access/models";
+import {Address, Nletter, User} from "../../data-access/models";
 import {UserStore} from "../../data-access/service/store/user.store";
 import {AddressStore} from "../../data-access/service/store/address.store";
-import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
-import {Nletter} from "../../data-access/models";
-import {timeout} from "rxjs";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'user-settings',
@@ -12,10 +10,9 @@ import {timeout} from "rxjs";
   styleUrls: ['./userSettings.component.scss']
 })
 export class UserSettingsComponent implements OnInit {
-  // @ts-ignore
-  user: User;
-  // @ts-ignore
-  addresses: Address[];
+
+  user: User | undefined;
+  addresses: Address[] | undefined;
 
   oldPassword: string = '';
   newPassword: string = '';
@@ -25,11 +22,10 @@ export class UserSettingsComponent implements OnInit {
   fulfillsPasswordRequirements: boolean = true;
   validOldPassword: boolean = true;
 
-  newsletter: boolean = false;
-  nletter: Nletter = {email: ''}
+  subscribedToNewsletter: boolean = false;
+  newsletter: Nletter = {email: ''}
 
-  // @ts-ignore
-  @ViewChild('descriptionField') descriptionRef: ElementRef;
+  @ViewChild('descriptionField') descriptionRef: ElementRef | undefined;
 
   constructor(private userStore: UserStore, private addressStore: AddressStore, private sanitizer: DomSanitizer) {
   }
@@ -37,10 +33,9 @@ export class UserSettingsComponent implements OnInit {
   ngOnInit() {
     this.userStore.loadUser().subscribe(user => {
       if (user) {
-        if( user.description == undefined ) {
-          user.description = "";
-        }
+        user.description = user.description ?? "";
         this.user = user;
+        // toDo
         setTimeout(() => {
           this.getDescription();
         }, 2000);
@@ -50,26 +45,25 @@ export class UserSettingsComponent implements OnInit {
       this.addresses = addresses
     });
 
-    this.userStore.getNewsletterStatus().subscribe(respond => this.newsletter = respond.valueOf());
+    this.userStore.getNewsletterStatus().subscribe(respond => this.subscribedToNewsletter = respond.valueOf());
   }
 
   onNewsletter(mail: string) {
-    this.nletter.email = mail;
-    this.newsletter = !this.newsletter;
-    this.newsletter ? this.userStore.subscribeNewsletter(this.nletter) : this.userStore.unsubscribeNewsletter();
+    this.newsletter.email = mail;
+    this.subscribedToNewsletter = !this.subscribedToNewsletter;
+    this.subscribedToNewsletter ? this.userStore.subscribeNewsletter(this.newsletter) : this.userStore.unsubscribeNewsletter();
   }
 
   getUserName(): string {
-    return this.user.firstName + " " + this.user.lastName;
+    return `${this.user!.firstName} ${this.user!.lastName}`;
   }
 
   getDescription(): void {
     let content = document.getElementById("descriptionField");
-    console.log( content );
-    if ( content != undefined ) {
+    console.log(content);
+    if (content && this.user!.description) {
       content!.replaceChildren();
-      // @ts-ignore
-      content!.appendChild(document.createRange().createContextualFragment(this.user.description));
+      content!.appendChild(document.createRange().createContextualFragment(this.user!.description));
     }
   }
 
@@ -105,42 +99,35 @@ export class UserSettingsComponent implements OnInit {
     fileReader.readAsDataURL(event.target.files[0]);
     fileReader.onloadend = () => {
       if (fileReader.result) {
-        let sanitizedImage = this.sanitizer.sanitize(SecurityContext.URL, fileReader.result.toString());
-        if (sanitizedImage) {
-          this.user.profilePicture = sanitizedImage.toString();
-
-        }
-        this.userStore.updateUser(this.user);
+        let sanitizedImage = this.sanitizer.sanitize(SecurityContext.URL, fileReader.result.toString()) ?? this.user!.profilePicture;
+        if (sanitizedImage) this.user!.profilePicture = sanitizedImage.toString();
+        this.userStore.updateUser(this.user!);
       }
     }
   }
 
   onSubmit(): void {
     if (this.newPassword != "") {
-      if (this.newPassword != this.newPasswordConfirm) {
-        this.matchingNewPasswords = false;
-        return;
-      } else {
-        this.matchingNewPasswords = true;
-      }
-      if (!(this.validateNewPasswordSpecialChars()
-        && this.validateNewPasswordOneNumber()
-        && this.validateNewPasswordEightChars())) {
-        this.fulfillsPasswordRequirements = false;
-        return;
-      } else {
-        this.fulfillsPasswordRequirements = true;
-      }
+      this.matchingNewPasswords = this.newPassword == this.newPasswordConfirm;
+      this.fulfillsPasswordRequirements = this.validateNewPassword();
+      
+      if (!this.matchingNewPasswords || !this.fulfillsPasswordRequirements) return;
     }
 
     try {
-      this.userStore.updateUser(this.user, this.oldPassword, this.newPassword);
+      this.userStore.updateUser(this.user!, this.oldPassword, this.newPassword);
       this.matchingNewPasswords = true;
       this.fulfillsPasswordRequirements = true;
       this.validOldPassword = true;
     } catch (Exception) {
       this.validOldPassword = false;
     }
+  }
+
+  private validateNewPassword(): boolean {
+    return (this.validateNewPasswordSpecialChars()
+      && this.validateNewPasswordOneNumber()
+      && this.validateNewPasswordEightChars());
   }
 
 

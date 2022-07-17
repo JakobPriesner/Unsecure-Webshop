@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {Article} from "../../../data-access/models/article";
+import {Article} from "../../../data-access/models";
 
 @Component({
   selector: 'article-overview-specifications',
@@ -7,8 +7,7 @@ import {Article} from "../../../data-access/models/article";
   styleUrls: ['./specifications.component.scss']
 })
 export class SpecificationsComponent {
-  // @ts-ignore
-  @Input article: Article;
+  @Input() article: Article | undefined;
   @Output() colorChangedEvent: EventEmitter<string> = new EventEmitter<string>();
   @Output() storageChangeEvent: EventEmitter<number> = new EventEmitter<number>();
 

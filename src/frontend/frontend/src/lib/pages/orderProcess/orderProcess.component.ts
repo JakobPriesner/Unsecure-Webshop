@@ -15,14 +15,9 @@ export class OrderProcessComponent implements OnInit {
   itemsList: SpecifiedItem[] = [];
   addresses: Address[] = [];
 
-  // @ts-ignore
-  selectedAddress: Address;
-
-  // @ts-ignore
-  paymentInformation: Payment;
-
-  // @ts-ignore
-  order: Order;
+  selectedAddress: Address | undefined;
+  paymentInformation: Payment | undefined;
+  order: Order | undefined;
 
   coupon: string = "";
 
@@ -30,11 +25,11 @@ export class OrderProcessComponent implements OnInit {
   reachedStep: number = 0;
 
   invalidData: boolean = false;
-  amount: string|undefined;
+  amount: string | undefined;
 
   constructor(private shoppingCartStore: ShoppingCartStore, private addressStore: AddressStore,
-              private orderStore: OrderStore, private route: ActivatedRoute ) {
-    this.route.queryParams.subscribe( params =>  {
+              private orderStore: OrderStore, private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
       this.amount = params['amount'];
     });
   }
@@ -47,32 +42,11 @@ export class OrderProcessComponent implements OnInit {
   }
 
   changeStep(selectedStep: number): void {
-    // bin 0, reached 1, möchte 2
     if (selectedStep < this.reachedStep) {
       this.currentStep = selectedStep;
     } else if (selectedStep <= this.reachedStep + 1) {
-      switch (this.reachedStep) {
-        case 1:
-          if (this.selectedAddress == undefined) {
-            this.invalidData = true;
-            this.currentStep = this.reachedStep;
-            return;
-          }
-          break;
-        case 2:
-          if (this.paymentInformation == undefined) {
-            this.invalidData = true;
-            this.currentStep = this.reachedStep;
-            return;
-          }
-          break;
-        default:
-          break;
-      }
-      if (selectedStep == this.reachedStep + 1)
-        this.reachedStep++;
-      this.invalidData = false;
-      this.onNextPage();
+      if (!this.validateInputData()) return;
+      this.gotoSelectedPage(selectedStep);
     }
   }
 
@@ -88,12 +62,13 @@ export class OrderProcessComponent implements OnInit {
   }
 
   onBuy(): void {
-    this.orderStore.postOrder({
+    let order: Order = {
       specifiedItems: this.itemsList,
       coupon: {name: this.coupon},
       address: this.selectedAddress,
       payment: this.paymentInformation
-    }, this.getValidAmount() ).subscribe(path => {
+    };
+    this.orderStore.postOrder(order, this.getValidAmount()).subscribe(path => {
       this.orderStore.loadOrderById(this.getIdOfPath(path)).subscribe(order => this.order = order);
 
       this.currentStep++;
@@ -104,18 +79,7 @@ export class OrderProcessComponent implements OnInit {
   }
 
   getValidAmount(): number {
-    if( this.amount != undefined )
-    {
-      let number = Number(this.amount);
-      if ( isNaN( number ) )
-      {
-        return -1;
-      } else {
-        return number;
-      }
-    } else {
-     return -1;
-    }
+    return +this.amount!;
   }
 
   getIdOfPath(path: string): number {
@@ -144,5 +108,34 @@ export class OrderProcessComponent implements OnInit {
   getConfirmationClasses(): string {
     let output: string = this.reachedStep >= 3 ? 'active' : '';
     return this.currentStep < 3 ? output + ' disabled' : output;
+  }
+
+  private gotoSelectedPage(selectedStep: number) {
+    if (selectedStep == this.reachedStep + 1)
+      this.reachedStep++;
+    this.invalidData = false;
+    this.onNextPage();
+  }
+
+  private validateInputData(): boolean {
+    switch (this.reachedStep) {
+      case 1:
+        if (this.selectedAddress == undefined) {
+          this.invalidData = true;
+          this.currentStep = this.reachedStep;
+          return false;
+        }
+        break;
+      case 2:
+        if (this.paymentInformation == undefined) {
+          this.invalidData = true;
+          this.currentStep = this.reachedStep;
+          return false;
+        }
+        break;
+      default:
+        return true;
+    }
+    return false;
   }
 }

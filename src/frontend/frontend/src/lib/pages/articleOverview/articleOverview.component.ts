@@ -11,13 +11,15 @@ import {WishlistStore} from "../../data-access/service/store/wishlist.store";
   styleUrls: ['./articleOverview.component.scss']
 })
 export class ArticleOverviewComponent implements OnInit {
-  // @ts-ignore
-  article: Article = undefined;
 
-  // @ts-ignore
-  specifiedItem: SpecifiedItem;
+  article: Article | undefined = undefined;
+  specifiedItem: SpecifiedItem | undefined;
 
-  constructor(private articleStore: ArticleStore, private route: ActivatedRoute, private routing: Router, private cartStore: ShoppingCartStore, private wishListStore: WishlistStore) {
+  constructor(private articleStore: ArticleStore,
+              private route: ActivatedRoute,
+              private routing: Router,
+              private cartStore: ShoppingCartStore,
+              private wishListStore: WishlistStore) {
   }
 
   ngOnInit() {
@@ -29,36 +31,36 @@ export class ArticleOverviewComponent implements OnInit {
   }
 
   onUpdateQuantity(value: number): void {
-    this.specifiedItem.quantity = value;
+    this.specifiedItem!.quantity = value;
   }
 
   onUpdateGbSize(value: number): void {
-    this.specifiedItem.gbSize = value;
+    this.specifiedItem!.gbSize = value;
   }
 
   onUpdateColor(value: string): void {
-    this.specifiedItem.color = value;
+    this.specifiedItem!.color = value;
   }
 
   onAddToShoppingCart(): void {
-    this.cartStore.addItem(this.specifiedItem).subscribe();
-    this.routing.navigateByUrl('/cart');
+    this.cartStore.addItem(this.specifiedItem!).subscribe();
+    this.routing.navigateByUrl!('/cart');
   }
 
   onAddToWishList(): void {
-    this.wishListStore.addItem(this.specifiedItem).subscribe();
-    this.routing.navigateByUrl('/wishlist');
+    this.wishListStore.addItem(this.specifiedItem!).subscribe();
+    this.routing.navigateByUrl!('/wishlist');
   }
 
-  //Hier mal gucken wie man des verbessern kann
-  openCommentField(){
+  openCommentField() {
     let row = document.createElement('div');
     row.className = 'row';
-    row.innerHTML = `
-      <br>
-      <input type="text">`;
-    // @ts-ignore
-    document.querySelector('.inputField').appendChild(row);
+    row.appendChild(document.createElement('br'));
+    let input = document.createElement('input');
+    input.type = 'text';
+    row.appendChild(input)
+    if (document.querySelector('.inputField') != null)
+      document.querySelector('.inputField')!.appendChild(row);
   }
 
 }

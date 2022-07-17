@@ -12,21 +12,20 @@ import {ShoppingCartStore} from "../../../data-access/service/store/shoppingCart
 export class SpecifiedItemComponent implements OnInit {
   @Input() showDeleteButton: boolean = true;
   @Input() editableQuantity: boolean = true;
-  // @ts-ignore
-  @Input() specifiedItem: SpecifiedItem;
+  @Input() specifiedItem: SpecifiedItem | undefined;
   @Input() showAddCartButton: boolean = false;
 
   @Output() onDeleteEvent: EventEmitter<number> = new EventEmitter<number>();
   @Output() onQuantityChangeEvent: EventEmitter<{ itemId: number, quantity: number }> = new EventEmitter<{ itemId: number, quantity: number }>();
 
-  // @ts-ignore
-  picture: string;
+  picture: string | undefined;
   showTrash: boolean = false;
 
   constructor(private imageStore: ImageStore, private routing: Router, private cartStore: ShoppingCartStore) {
   }
 
   ngOnInit() {
+    if (!this.specifiedItem) throw new Error();
     if (this.specifiedItem.pictureId)
       this.imageStore.loadImageById(this.specifiedItem.pictureId).subscribe(picture => {
         this.picture = picture;
@@ -34,12 +33,12 @@ export class SpecifiedItemComponent implements OnInit {
   }
 
   onItemDelete(): void {
-    this.onDeleteEvent.emit(this.specifiedItem.id);
+    this.onDeleteEvent.emit(this.specifiedItem!.id);
   }
 
   onItemChange(event: any): void {
-    if (this.specifiedItem.id) {
-      this.onQuantityChangeEvent.emit({itemId: this.specifiedItem.id, quantity: event.target.value});
+    if (this.specifiedItem!.id) {
+      this.onQuantityChangeEvent.emit({itemId: this.specifiedItem!.id, quantity: event.target.value});
     }
   }
 
@@ -52,7 +51,7 @@ export class SpecifiedItemComponent implements OnInit {
   }
 
   onAddToShoppingCart() {
-    this.cartStore.addItem(this.specifiedItem).subscribe();
+    this.cartStore.addItem(this.specifiedItem!).subscribe();
     this.onItemDelete();
     this.routing.navigateByUrl('/cart');
   }
