@@ -53,6 +53,6 @@ export class SpecifiedItemComponent implements OnInit {
   onAddToShoppingCart() {
     this.cartStore.addItem(this.specifiedItem!).subscribe();
     this.onItemDelete();
-    this.routing.navigateByUrl('/cart');
+    this.routing.navigateByUrl!('/cart');
   }
 }

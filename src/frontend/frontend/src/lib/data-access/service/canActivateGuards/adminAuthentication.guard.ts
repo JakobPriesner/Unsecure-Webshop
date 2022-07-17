@@ -15,7 +15,7 @@ export class AdminAuthenticationGuard implements CanActivate {
       return true;
     }
 
-    this.router.navigate(['/adminLogin'], {queryParams: {returnUrl: state.url}});
+    this.router.navigate!(['/adminLogin'], {queryParams: {returnUrl: state.url}});
     return false;
   }
 }

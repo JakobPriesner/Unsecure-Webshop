@@ -8,30 +8,14 @@ import {Article} from "../../models";
 })
 
 export class ArticleStore {
-  // @ts-ignore
+
   articles: Article[] = [];
-  // @ts-ignore
-  smallArticles: Article[];
+  smallArticles: Article[] | undefined;
   articleSubject: ReplaySubject<Article[]> = new ReplaySubject<Article[]>(1);
   articleSubjectFrontpage: ReplaySubject<Article[]> = new ReplaySubject<Article[]>(1);
 
   constructor(private backendService: BackendService) {
   }
-
-  // loadArticles(): ReplaySubject<Article[]> {
-  //   if (this.articles.length == 0) {
-  //     this.backendService.getArticles().subscribe(articles => {
-  //       this.articles = articles;
-  //       this.articleSubject.next(articles);
-  //     });
-  //
-  //   } else {
-  //     this.articleSubject.next(this.articles);
-  //   }
-  //
-  //   return this.articleSubject;
-  //
-  // }
 
   loadArticlesFrontpage(): ReplaySubject<Article[]> {
     if (!this.smallArticles) {

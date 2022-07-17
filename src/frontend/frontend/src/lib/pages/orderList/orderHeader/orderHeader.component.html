@@ -2,7 +2,7 @@
   <div *ngFor="let item of itemList" class="float-none">
     <div class="row">
       <div *ngIf="item.pictureId" class="col-1">
-        <img *ngIf="images.has(item.pictureId)" [src]="item.pictureId" class="imgSize">
+        <img *ngIf="images.has(item.pictureId)" [src]="item.pictureId" alt="profile-picture" class="imgSize">
       </div>
       <span class="col"><h3>{{item.name}}</h3></span>
     </div>
@@ -12,7 +12,7 @@
   </div>
   <div class="mx-auto">
     Bestellt am {{orderDate}} <br/>
-    <img [ngClass]="isOpen ? 'toggle-up' : 'toggle-down'" src="assets/arrow_down_black.svg">
+    <img [ngClass]="isOpen ? 'toggle-up' : 'toggle-down'" alt="drop-down-icon" src="assets/arrow_down_black.svg">
   </div>
 </div>
 

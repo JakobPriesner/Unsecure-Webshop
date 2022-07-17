@@ -1,8 +1,7 @@
 import {Component, OnInit, TemplateRef} from "@angular/core";
 import {BackendService} from "../../data-access/service/backend.service";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
-import {RankingStudent} from "../../data-access/models/rankingStudent";
-import {Router} from "@angular/router";
+import {RankingStudent} from "../../data-access/models";
 
 @Component({
   selector: 'biedis-page',
@@ -10,7 +9,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./biedisPage.component.scss']
 })
 
-export class BiedisPageComponent implements OnInit{
+export class BiedisPageComponent implements OnInit {
 
 
   // @ts-ignore
@@ -20,18 +19,18 @@ export class BiedisPageComponent implements OnInit{
   modalRef?: BsModalRef;
   level: string = "Beginner";
   levelNumber: number = 1;
-  description: Map<number,string[]> = new Map();
+  description: Map<number, string[]> = new Map();
   levelNames: string[] = ["Beginner", "Tutor", "Endboss"];
 
-  constructor(private backendService: BackendService, private modalService: BsModalService, private router: Router) {
+  constructor(private backendService: BackendService, private modalService: BsModalService) {
     this.backendService.getLevel().subscribe(levelNumber => {
       this.levelNumber = levelNumber;
-      this.level = this.levelNames[levelNumber-1];
+      this.level = this.levelNames[levelNumber - 1];
     });
     this.onLevelChange(this.levelNumber);
   }
 
-  onLevelChange(level: number){
+  onLevelChange(level: number) {
     switch (level) {
       case 1:
         this.level = "Beginner";
@@ -55,7 +54,7 @@ export class BiedisPageComponent implements OnInit{
     this.backendService.setLevel(level);
   }
 
-  onDescriptionChange(level: number){
+  onDescriptionChange(level: number) {
     switch (level) {
       case 1:
         this.description.set(1, [
@@ -161,7 +160,7 @@ export class BiedisPageComponent implements OnInit{
   }
 
   getInformationArray(level: number) {
-    var information: string[] = [
+    let information: string[] = [
       "SQL-Injection",
       "Blind-Sql-Injection",
       "E-Mail without @",
@@ -176,7 +175,7 @@ export class BiedisPageComponent implements OnInit{
       "Look for E-Mail Address",
       "Hash User"];
 
-    var boolIdentifier: string[] = [
+    let boolIdentifier: string[] = [
       "sqlInjection",
       "blindSqlInjection",
       "emailWithoutAt",
@@ -191,7 +190,7 @@ export class BiedisPageComponent implements OnInit{
       "lookForEmailAddress",
       "hashUser"];
 
-    var routingIdentifier: string[] = [
+    let routingIdentifier: string[] = [
       "/sql_injection",
       "/blind_sql_injection",
       "/email_without_at",
@@ -207,9 +206,9 @@ export class BiedisPageComponent implements OnInit{
       "/hash_user"
     ]
 
-    var tmpStudent: RankingStudent = this.actualStudent;
-    // @ts-ignore
-    return this.description.get(level).map(function(item, index){
+    let tmpStudent: RankingStudent = this.actualStudent;
+
+    return this.description.get(level)!.map(function (item, index) {
       let identifier = boolIdentifier[index] as keyof RankingStudent;
       return [item, information[index], tmpStudent[identifier], routingIdentifier[index]];
     })
@@ -222,49 +221,49 @@ export class BiedisPageComponent implements OnInit{
   }
 
   reloadRanking() {
-      setInterval(function(){
-      }, 10000);
-      this.backendService.loadRankingStudents().subscribe(rankingStudents => this.rankingStudents = rankingStudents);
+    setInterval(function () {
+    }, 10000);
+    this.backendService.loadRankingStudents().subscribe(rankingStudents => this.rankingStudents = rankingStudents);
   }
 
-  getSecurityBreaches(rankingStudent: RankingStudent): number{
+  getSecurityBreaches(rankingStudent: RankingStudent): number {
     let securityBreachCounter: number = 0;
-    if(rankingStudent.blindSqlInjection)
+    if (rankingStudent.blindSqlInjection)
       securityBreachCounter++;
-    if(rankingStudent.xss)
+    if (rankingStudent.xss)
       securityBreachCounter++;
-    if(rankingStudent.profile_picture)
+    if (rankingStudent.profile_picture)
       securityBreachCounter++;
-    if(rankingStudent.priceOrderBug)
+    if (rankingStudent.priceOrderBug)
       securityBreachCounter++;
-    if(rankingStudent.lookForEmailAddress)
+    if (rankingStudent.lookForEmailAddress)
       securityBreachCounter++;
-    if(rankingStudent.htmlCommentUser)
+    if (rankingStudent.htmlCommentUser)
       securityBreachCounter++;
-    if(rankingStudent.guessUserLogin)
+    if (rankingStudent.guessUserLogin)
       securityBreachCounter++;
-    if(rankingStudent.guessCoupon)
+    if (rankingStudent.guessCoupon)
       securityBreachCounter++;
-    if(rankingStudent.hashUser)
+    if (rankingStudent.hashUser)
       securityBreachCounter++;
-    if(rankingStudent.emailWithoutAt)
+    if (rankingStudent.emailWithoutAt)
       securityBreachCounter++;
-    if(rankingStudent.commentXss)
+    if (rankingStudent.commentXss)
       securityBreachCounter++;
-    if(rankingStudent.sqlInjection)
+    if (rankingStudent.sqlInjection)
       securityBreachCounter++;
-    if(rankingStudent.deleteUser)
+    if (rankingStudent.deleteUser)
       securityBreachCounter++;
     return securityBreachCounter;
   }
 
   openModal(securityBreaches: TemplateRef<any>, rankingStudent: RankingStudent) {
-    if(rankingStudent){
+    if (rankingStudent) {
       this.actualStudent = rankingStudent;
     } else {
       this.actualStudent.ipAddress = "-1";
     }
-      this.modalRef = this.modalService.show(securityBreaches, {animated: true});
+    this.modalRef = this.modalService.show(securityBreaches, {animated: true});
   }
 
   onShopReset() {

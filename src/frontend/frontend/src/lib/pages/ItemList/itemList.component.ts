@@ -9,8 +9,6 @@ import {ActivatedRoute} from "@angular/router";
   styleUrls: ['./itemList.component.scss']
 })
 export class ItemListComponent implements OnInit {
-
-  //@Input articleNumber: number;
   articles: Article[] = [];
 
 
@@ -18,8 +16,8 @@ export class ItemListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe( params => {
-      this.articleStore.searchArticles(params["search"]).subscribe( articles => this.articles = articles );
+    this.route.queryParams.subscribe(params => {
+      this.articleStore.searchArticles(params["search"]).subscribe(articles => this.articles = articles);
     });
   }
 
