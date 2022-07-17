@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {Payment} from "../../../data-access/models";
-import Order = jasmine.Order;
+import {Order, Payment} from "../../../data-access/models";
 
 @Component({
   selector: 'payment-information',

@@ -1,7 +1,7 @@
 <li (mouseenter)="onMouseEnter( )"
     (mouseleave)="onMouseLeave( )"
     class="list-group-item specified-item mb-2 rounded-3 ps-5">
-  <div class="row">
+  <div *ngIf="specifiedItem" class="row">
     <div class="col-lg-1 d-xxl-block d-none">
       <img *ngIf="picture" [src]="this.picture" alt="article-picture" class="rounded" width="100rem">
     </div>

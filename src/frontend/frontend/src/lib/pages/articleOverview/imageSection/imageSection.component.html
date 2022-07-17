@@ -1,5 +1,5 @@
 <carousel [interval]="10000" [isAnimated]="true">
-  <slide *ngFor="let picture of article.pictureIds">
+  <slide *ngFor="let picture of getArticlePictureIds()">
     <img *ngIf="images.has(picture)" [src]="images.get(picture)" alt="{{picture}}"
          style="display: block; width: 100%;">
   </slide>

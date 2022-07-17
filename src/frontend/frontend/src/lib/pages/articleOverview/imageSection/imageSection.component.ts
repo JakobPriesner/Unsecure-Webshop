@@ -22,4 +22,8 @@ export class ImageSectionComponent implements OnInit {
       });
     });
   }
+
+  getArticlePictureIds(): number[] {
+    return this.article?.pictureIds ?? [];
+  }
 }

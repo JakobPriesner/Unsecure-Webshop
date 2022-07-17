@@ -1,16 +1,14 @@
-@import "node_modules/bootstrap/scss/bootstrap";
-
 li {
   width: 5rem;
   height: 5rem;
-  background-color: $secondary;
+  background-color: #6c757d;
   border-radius: 5rem;
   alignment: center;
   align-content: center;
 }
 
 li .active {
-  background-color: $primary;
+  background-color: #0d6efd;
 }
 
 a {
@@ -18,7 +16,7 @@ a {
 }
 
 .active {
-  background-color: $primary !important;
+  background-color: #0d6efd !important;
 }
 
 .disabled {
