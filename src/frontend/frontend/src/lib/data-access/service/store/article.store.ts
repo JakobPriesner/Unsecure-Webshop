@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {BackendService} from "../backend.service";
-import {ReplaySubject} from "rxjs";
-import {Article} from "../../models";
+import {Observable, ReplaySubject} from "rxjs";
+import {Article, Commentary} from "../../models";
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +48,25 @@ export class ArticleStore {
       articleSearchSubject.next(articles);
     });
     return articleSearchSubject;
+  }
+
+  postCommentary(commentary: Commentary, articleId: number): ReplaySubject<Article>{
+    // let article: Article;
+    let index = this.articles.findIndex(i => i.articleNumber==articleId);
+    if(index != -1){
+      this.articles[index].comments = this.articles[index].comments ?? [];
+      this.articles[index].comments!.push(commentary);
+    }
+    // this.articles.forEach(function (value) {
+    //   if(value.articleNumber == articleId){
+    //     value.comments?.push(commentary);
+    //   }
+    // })
+    const subject = new ReplaySubject<Article>(1);
+    this.backendService.postCommentToArticle(commentary, articleId).subscribe(() => {
+      this.backendService.getArticleById(articleId).subscribe(article => subject.next(article));
+    });
+    return subject;
   }
 
 }

@@ -1,6 +1,6 @@
 package de.fhws.biedermann.webshop.models;
 
-public class Commentary {
+public class Commentary implements IModel {
 
 	private int id;
 	private String commentText;

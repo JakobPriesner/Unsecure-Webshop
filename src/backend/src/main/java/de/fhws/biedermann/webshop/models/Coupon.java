@@ -1,6 +1,6 @@
 package de.fhws.biedermann.webshop.models;
 
-public class Coupon {
+public class Coupon implements IModel {
 
 	private String name;
 	private double percent;

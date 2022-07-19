@@ -22,6 +22,6 @@ export class UuidService {
   }
 
   getNewUuid(): Observable<Uuid> {
-    return this.httpClient.get<Uuid>(Statics.url + 'user/me');
+    return this.httpClient.get<Uuid>(Statics.url + 'users/me');
   }
 }

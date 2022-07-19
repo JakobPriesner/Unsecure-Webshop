@@ -1,4 +1,8 @@
-<accordion *ngIf="orderList.length != 0; else emptyOrderList" [isAnimated]="true">
+<div class="col" style="font-size: xx-large">
+  Meine Bestellungen
+  <img alt="" src="assets/icons/list_black_opsz24.svg" type="list"/>
+</div>
+<accordion *ngIf="orderList.length != 0; else emptyOrderList">
   <accordion-group *ngFor="let order of orderList">
     <button (click)="showBody = true;" accordion-heading
             class="accordionButton" type="button">

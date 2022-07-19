@@ -2,10 +2,8 @@ package de.fhws.biedermann.webshop.database;
 
 import de.fhws.biedermann.webshop.models.RankingRow;
 
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +36,39 @@ public class DataAccessAdminPanel {
         this.createDatabase();
     }
 
+    public void resetRanking(){
+        this.deleteRanking();;
+        this.createRanking();
+    }
+
+    private void deleteRanking(){
+        try (Connection con = this.createConnection();
+             Statement stmt = con.createStatement()){
+            for (String sql : DatabaseQueries.deleteRanking) {
+                stmt.execute(sql);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createRanking(){
+        try (Connection con = this.createConnection();
+             Statement stmt = con.createStatement()){
+            for (String sql : DatabaseQueries.createRanking) {
+                stmt.execute(sql);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<String> checkForNewFindings(String ipAddress){
         ArrayList<String> findings = new ArrayList<>();
         try (Connection con = this.createConnection();
              Statement stmt = con.createStatement()){
             String sql="SELECT sql_injection, blind_sql_injection, email_without_at, xss, profile_picture, html_comment_user, price_order_bug, " +
-                    "guess_user_login, guess_coupon, delete_user, comment_xss, look_for_email_address, hash_user FROM ranking WHERE ip_address='"+ipAddress+"';";
+                    "guess_user_login, guess_coupon, delete_user, comment_xss, login_brute_force, hash_user, security_misconfiguration FROM ranking WHERE ip_address='"+ipAddress+"';";
             ResultSet rs = stmt.executeQuery(sql);
             if(rs.next()){
                 ResultSetMetaData rsmd = rs.getMetaData();
@@ -73,12 +98,12 @@ public class DataAccessAdminPanel {
         List<RankingRow> ranking = new ArrayList<>();
         try (Connection con = this.createConnection();
              Statement stmt = con.createStatement()){
-            String sql="SELECT *, SUM(sql_injection+blind_sql_injection+email_without_at+xss+profile_picture+html_comment_user+price_order_bug+guess_user_login+guess_coupon+delete_user+comment_xss+look_for_email_address+hash_user) as sum FROM ranking GROUP BY ip_address ORDER BY sum DESC;;";
+            String sql="SELECT *, SUM(sql_injection+blind_sql_injection+email_without_at+xss+profile_picture+html_comment_user+price_order_bug+guess_user_login+guess_coupon+delete_user+comment_xss+login_brute_force+hash_user+security_misconfiguration) as sum FROM ranking GROUP BY ip_address ORDER BY sum DESC;";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()){
                 ranking.add( new RankingRow(rs.getString("ip_address"), rs.getInt("sql_injection"), rs.getInt("blind_sql_injection"), rs.getInt("email_without_at"), rs.getInt("xss"), rs.getInt("profile_picture"),
                         rs.getInt("html_comment_user"), rs.getInt("price_order_bug"), rs.getInt("guess_user_login"), rs.getInt("guess_coupon"),
-                        rs.getInt("delete_user"), rs.getInt("comment_xss"), rs.getInt("look_for_email_address"), rs.getInt("hash_user"), rs.getInt("sum")));
+                        rs.getInt("delete_user"), rs.getInt("comment_xss"), rs.getInt("login_brute_force"), rs.getInt("hash_user"), rs.getInt("security_misconfiguration"), rs.getInt("sum")));
             }
             rs.close();
         } catch (SQLException e) {
@@ -224,10 +249,10 @@ public class DataAccessAdminPanel {
         }
     }
 
-    public void putLookForEmail(String ipAddress){
+    public void putLoginBruteForce(String ipAddress){
         try (Connection con = this.createConnection();
              Statement stmt = con.createStatement()){
-            String sql="UPDATE ranking SET look_for_email_address=1 WHERE ip_address='"+ipAddress+"';";
+            String sql="UPDATE ranking SET login_brute_force=1 WHERE ip_address='"+ipAddress+"';";
             stmt.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();

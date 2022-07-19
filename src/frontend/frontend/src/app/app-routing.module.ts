@@ -101,8 +101,8 @@ const routes: Routes = [
     loadChildren: () => import('../lib/pages/securityVulnerabilityInformation/guessCoupon/guessCoupon.module').then(m => m.GuessCouponModule)
   },
   {
-    path: 'look_for_email_address',
-    loadChildren: () => import('../lib/pages/securityVulnerabilityInformation/lookForEmailAddress/lookForEmailAddress.module').then(m => m.LookForEmailAddressModule)
+    path: 'login_brute_force',
+    loadChildren: () => import('../lib/pages/securityVulnerabilityInformation/loginBruteForce/loginBruteForce.module').then(m => m.LoginBruteForceModule)
   },
   {
     path: 'delete_user',
@@ -122,10 +122,10 @@ const routes: Routes = [
   },
   {
     path: 'security_misconfiguration',
-    loadChildren: () => import('../lib/pages/securityVulnerabilityInformation/securityMissconfiguration/securityMissconfiguration.module').then(m => m.SecurityMissconfigurationModule)
+    loadChildren: () => import('../lib/pages/securityVulnerabilityInformation/securityMisconfiguration/securityMisconfiguration.module').then(m => m.SecurityMisconfigurationModule)
   },
   {
-    path: 'user/:id',
+    path: 'users/:id',
     loadChildren: () => import('../lib/pages/foreignUser/foreignUser.module').then(m => m.ForeignUserModule)
   },
   {path: '', redirectTo: 'index', pathMatch: 'full'},

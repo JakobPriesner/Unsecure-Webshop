@@ -2,7 +2,7 @@ package de.fhws.biedermann.webshop.models;
 
 import java.util.List;
 
-public class Article {
+public class Article implements IModel {
 
 	private int articleNumber;
 	private String modelName;

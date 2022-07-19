@@ -1,6 +1,6 @@
 package de.fhws.biedermann.webshop.models;
 
-public class Address
+public class Address implements IModel
 { //erledigt
 
 	private int id;

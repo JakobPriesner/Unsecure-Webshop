@@ -23,8 +23,8 @@ import {EmailWithoutAtModule} from "../lib/pages/securityVulnerabilityInformatio
 import {GuessUserLoginModule} from "../lib/pages/securityVulnerabilityInformation/guessUserLogin/guessUserLogin.module";
 import {GuessCouponModule} from "../lib/pages/securityVulnerabilityInformation/guessCoupon/guessCoupon.module";
 import {
-  LookForEmailAddressModule
-} from "../lib/pages/securityVulnerabilityInformation/lookForEmailAddress/lookForEmailAddress.module";
+  LoginBruteForceModule
+} from "../lib/pages/securityVulnerabilityInformation/loginBruteForce/loginBruteForce.module";
 import {DeleteUserModule} from "../lib/pages/securityVulnerabilityInformation/deleteUser/deleteUser.module";
 import {PriceOrderBugModule} from "../lib/pages/securityVulnerabilityInformation/priceOrderBug/priceOrderBug.module";
 import {
@@ -32,8 +32,8 @@ import {
 } from "../lib/pages/securityVulnerabilityInformation/passwordHashing/passwordHashing.module";
 import {CommentXSSModule} from "../lib/pages/securityVulnerabilityInformation/commentXSS/commentXSS.module";
 import {
-  SecurityMissconfigurationModule
-} from "../lib/pages/securityVulnerabilityInformation/securityMissconfiguration/securityMissconfiguration.module";
+  SecurityMisconfigurationModule
+} from "../lib/pages/securityVulnerabilityInformation/securityMisconfiguration/securityMisconfiguration.module";
 
 
 @NgModule({
@@ -59,12 +59,12 @@ import {
     EmailWithoutAtModule,
     GuessUserLoginModule,
     GuessCouponModule,
-    LookForEmailAddressModule,
+    LoginBruteForceModule,
     DeleteUserModule,
     PriceOrderBugModule,
     PasswordHashingModule,
     CommentXSSModule,
-    SecurityMissconfigurationModule
+    SecurityMisconfigurationModule
   ],
   providers: [],
   bootstrap: [AppComponent]

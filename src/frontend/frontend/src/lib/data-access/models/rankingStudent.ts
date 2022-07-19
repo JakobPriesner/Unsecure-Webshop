@@ -11,7 +11,8 @@ export interface RankingStudent{
   guessCoupon: boolean;
   deleteUser: boolean;
   commentXss: boolean;
-  lookForEmailAddress: boolean;
+  loginBruteForce: boolean;
   hashUser: boolean;
+  securityMisconfiguration: boolean;
   points: number;
 }

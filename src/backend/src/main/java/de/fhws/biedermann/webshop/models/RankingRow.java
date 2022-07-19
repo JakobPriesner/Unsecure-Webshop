@@ -2,7 +2,7 @@ package de.fhws.biedermann.webshop.models;
 
 import java.io.Serializable;
 
-public class RankingRow implements Serializable {
+public class RankingRow implements Serializable, IModel {
 
     private String ipAddress;
     private boolean sqlInjection;
@@ -16,8 +16,9 @@ public class RankingRow implements Serializable {
     private boolean guessCoupon;
     private boolean deleteUser;
     private boolean commentXss;
-    private boolean lookForEmailAddress;
+    private boolean loginBruteForce;
     private boolean hashUser;
+    private boolean securityMisconfiguration;
     private int points;
 
     public RankingRow() {
@@ -25,7 +26,7 @@ public class RankingRow implements Serializable {
 
     public RankingRow(String ipAddress, int sqlInjection, int blindSqlInjection, int emailWithoutAt, int xss, int profile_picture,
                       int htmlCommentUser, int priceOrderBug, int guessUserLogin, int guessCoupon, int deleteUser, int commentXss,
-                      int lookForEmailAddress, int hashUser, int points) {
+                      int loginBruteForce, int hashUser, int securityMisconfiguration, int points) {
         this.ipAddress=ipAddress;
         this.points=points;
         this.sqlInjection= sqlInjection==0 ? false : true;
@@ -39,8 +40,9 @@ public class RankingRow implements Serializable {
         this.guessCoupon =guessCoupon==0?false:true;
         this.deleteUser = deleteUser==0?false:true;
         this.commentXss=commentXss==0?false:true;
-        this.lookForEmailAddress = lookForEmailAddress==0?false:true;
+        this.loginBruteForce = loginBruteForce==0?false:true;
         this.hashUser = hashUser==0?false:true;
+        this.securityMisconfiguration = securityMisconfiguration==0?false:true;
     }
 
     public String getIpAddress() {
@@ -139,12 +141,12 @@ public class RankingRow implements Serializable {
         this.commentXss = commentXss;
     }
 
-    public boolean isLookForEmailAddress() {
-        return lookForEmailAddress;
+    public boolean isLoginBruteForce() {
+        return loginBruteForce;
     }
 
-    public void setLookForEmailAddress(boolean lookForEmailAddress) {
-        this.lookForEmailAddress = lookForEmailAddress;
+    public void setLoginBruteForce(boolean loginBruteForce ) {
+        this.loginBruteForce = loginBruteForce;
     }
 
     public boolean isHashUser() {
@@ -153,6 +155,16 @@ public class RankingRow implements Serializable {
 
     public void setHashUser(boolean hashUser) {
         this.hashUser = hashUser;
+    }
+
+    public boolean isSecurityMisconfiguration( )
+    {
+        return securityMisconfiguration;
+    }
+
+    public void setSecurityMisconfiguration( boolean securityMisconfiguration )
+    {
+        this.securityMisconfiguration = securityMisconfiguration;
     }
 
     public int getPoints() {

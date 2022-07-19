@@ -1,6 +1,6 @@
 package de.fhws.biedermann.webshop.models;
 
-public class Contact
+public class Contact implements IModel
 {
 	private String firstName;
 	private String lastName;

@@ -61,11 +61,13 @@ export class UserStore {
   }
 
   subscribeNewsletter(nletter: Nletter): Observable<any> {
+    this.user!.newsletter = true;
     return this.backendService.postNewsletter(nletter);
   }
 
-  unsubscribeNewsletter(): void {
-    this.backendService.deleteNewsletter().subscribe();
+  unsubscribeNewsletter(): Observable<any> {
+    this.user!.newsletter = false;
+    return this.backendService.deleteNewsletter();
   }
 
   cleaningUp(): void {

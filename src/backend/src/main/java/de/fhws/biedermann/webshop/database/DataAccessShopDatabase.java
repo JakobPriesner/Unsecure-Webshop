@@ -6,6 +6,8 @@ import de.fhws.biedermann.webshop.models.modelsdb.ArticleDB;
 import de.fhws.biedermann.webshop.models.modelsdb.CommentDB;
 
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +19,12 @@ public class DataAccessShopDatabase {
         Connection c = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:src/backend/src/main/java/de/fhws/biedermann/webshop/database/shopDatabase.db");
+            Path currentRelativePath = FileSystems.getDefault( ).getPath( "" );
+            c = DriverManager.getConnection( String.format( "jdbc:sqlite:%s/src/backend/src/main/java/de/fhws/biedermann/webshop/database/shopDatabase.db", currentRelativePath.toAbsolutePath() ) );
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-            System.out.println("Can't create Connection!");
+            ex.printStackTrace();
         } catch (ClassNotFoundException e) {
-            System.out.println("Class not found!");
+            e.printStackTrace();
         }
         return c;
     }
@@ -30,6 +32,35 @@ public class DataAccessShopDatabase {
     public void resetDatabase() {
         this.deleteDatabase();
         this.createDatabase();
+    }
+
+    public void resetDatabaseInProduction() {
+        this.deleteDatabaseInProduction();
+        this.createDatabaseInProduction();
+    }
+
+    private void deleteDatabaseInProduction() {
+        try (Connection con = this.createConnection();
+             Statement stmt = con.createStatement()) {
+            for (String sql : DatabaseQueries.deleteDatabaseInProduction) {
+                stmt.execute(sql);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createDatabaseInProduction() {
+        try (Connection con = this.createConnection();
+             Statement stmt = con.createStatement()){
+            for (String sql : DatabaseQueries.createDatabaseInProduction) {
+                stmt.execute(sql);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        this.postArticleVersions();
+        this.postComments();
     }
 
     private void createDatabase() {
@@ -42,6 +73,7 @@ public class DataAccessShopDatabase {
             e.printStackTrace();
         }
         this.postDummyUsers();
+        this.postRealUser();
         this.postArticleVersions();
         this.postComments();
     }
@@ -63,7 +95,8 @@ public class DataAccessShopDatabase {
         }
     }
 
-    public Commentary postCommentary(Commentary comment, int articleId, int userId) {
+    public Commentary postCommentary(Commentary comment, int articleId, String sessionId) {
+        int userId = getUserId( sessionId );
         if(this.checkForInjection(comment.getCommentText()) || this.checkForInjection(comment.getFirstName()) ||
                 this.checkForInjection(comment.getLastName())|| this.checkForInjection(comment.getProfilePicture())){
            return new Commentary();
@@ -87,10 +120,10 @@ public class DataAccessShopDatabase {
         Commentary commentary = null;
         try (Connection con = this.createConnection();
              Statement stmt = con.createStatement()){
-            String sql = "SELECT * FROM comment INNER JOIN user on user.id=comment.user_id WHERE id=" + id + ";";
+            String sql = "SELECT * FROM comment INNER JOIN user on user.id=comment.user_id WHERE comment.id=" + id + ";";
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
-                commentary = new Commentary(rs.getInt("id"), rs.getString("comment_text"), rs.getInt("user_id"),
+                commentary = new Commentary(rs.getInt(1), rs.getString("comment_text"), rs.getInt("user_id"),
                     rs.getString("firstname"), rs.getString("lastname"), rs.getString("profile_picture"));
             }
             rs.close();
@@ -519,7 +552,8 @@ public class DataAccessShopDatabase {
             if (rs.next()) {
                 order = new Order(orderId, null, this.getCoupon(rs.getString("coupon_code")), this.getAddress(rs.getInt("address_id")), this.getPayment(orderId), rs.getString("order_date"), rs.getDouble("amount"));
             }
-            order.setSpecifiedItems(this.getOrderItems(orderId));
+            List<ArticleVersion> articles =this.getOrderItems(orderId);
+            order.setSpecifiedItems(articles);
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -596,7 +630,7 @@ public class DataAccessShopDatabase {
 
     public List<Article> getArticles(int page, String search) {
         if(this.checkForInjection(search)){
-            return new ArrayList<Article>();
+            return new ArrayList<>();
         }
         if(page==0){
             page=1;
@@ -842,10 +876,11 @@ public class DataAccessShopDatabase {
         ArrayList<ArticleVersion> articleVersionList = new ArrayList<>();
         try (Connection con = this.createConnection();
              Statement stmt = con.createStatement()){
-            String sql = "SELECT id, article_version_id FROM sales_order_article_version WHERE sales_order_id=" + orderId + ";";
+            String sql = "SELECT id, article_version_id, quantity FROM sales_order_article_version WHERE sales_order_id=" + orderId + ";";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 ArticleVersion articleVersion = this.getArticleVersion(rs.getInt("article_version_id"));
+                articleVersion.setQuantity(rs.getInt("quantity"));
                 articleVersion.setId(rs.getInt("id"));
                 articleVersionList.add(articleVersion);
             }
@@ -878,7 +913,19 @@ public class DataAccessShopDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
+    private void postRealUser() {
+        try (Connection con = this.createConnection();
+             Statement stmt = con.createStatement()){
+            for (User u : DatabaseQueries.bidermannUser) {
+                stmt.execute("INSERT INTO user(e_mail, firstname, lastname, password, newsletter, salutation, title, profile_picture, real_user, description) " +
+                        "VALUES('" + u.getMail() + "', '" + u.getFirstName() + "', '" + u.getLastName() + "', '" + this.encryptPasswordRealUser(u.getPassword()) + "', " + u.isNewsletter() + ",'" +
+                        u.getSalutation() + "', '" + u.getTitle() + "', '" + u.getProfilePicture() + "', " + true + ",'" + u.getDescription() + "');");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void postArticles() {
@@ -979,10 +1026,5 @@ public class DataAccessShopDatabase {
             e.printStackTrace();
         }
         return 0;
-    }
-
-    public static void main(String[] args){
-        DataAccessShopDatabase d = new DataAccessShopDatabase();
-       d.resetDatabase();
     }
 }

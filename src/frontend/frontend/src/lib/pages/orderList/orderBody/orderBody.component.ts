@@ -29,9 +29,9 @@ export class OrderBodyComponent implements OnInit {
 
   updateDate() {
     if (this.order.date) {
-      let dateArray: string[] = this.order.date.split(".");
+      let dateArray: string[] = this.order.date.split("-");
       let tmpDate: Date = new Date();
-      tmpDate.setFullYear(parseInt(dateArray[2]), parseInt(dateArray[1]) + 1, parseInt(dateArray[0]));
+      tmpDate.setFullYear(parseInt(dateArray[0]), parseInt(dateArray[1]) + 1, parseInt(dateArray[2]));
       if (tmpDate.getMonth() != 0) {
         this.newDate = `${tmpDate.getDate()}.${tmpDate.getMonth().toString().padStart(2, "0")}.${tmpDate.getFullYear()}`
       } else {
@@ -39,5 +39,4 @@ export class OrderBodyComponent implements OnInit {
       }
     }
   }
-
 }

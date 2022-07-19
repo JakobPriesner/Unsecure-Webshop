@@ -2,6 +2,8 @@ import {Component, Input, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 import {AuthenticationService} from "../../data-access/service/authentication.service";
 import {UserTypes} from "../../data-access/enums/userTypes";
+import {CookieService} from "ngx-cookie-service";
+import {AdminAuthenticationGuard} from "../../data-access/service/canActivateGuards/adminAuthentication.guard";
 
 @Component({
   selector: 'navbar',
@@ -14,24 +16,20 @@ export class NavbarComponent implements OnInit {
   loginAdmin: boolean = false;
   searchInput: string = "";
 
-  constructor(private authenticationService: AuthenticationService, private router: Router) {
+  constructor(private authenticationService: AuthenticationService, private router: Router, private cookieService: CookieService, private adminAuthentication: AdminAuthenticationGuard) {
   }
 
   ngOnInit() {
     this.authenticationService.getStatus().subscribe(
       status => {
-        this.login = status;
+        this.login = status == UserTypes.User;
+        this.loginAdmin = status == UserTypes.Admin;
       }
-    );
-    this.authenticationService.getAdminStatus().subscribe(
-      status => {
-        this.loginAdmin = status;
-      }
-    );
+    )
   }
 
   onLogOut(): void {
-    if (this.authenticationService.userType == UserTypes.User) {
+    if (this.cookieService.get("userType") == UserTypes.User.toString()) {
       this.authenticationService.logout().subscribe();
     } else {
       this.authenticationService.adminLogout().subscribe();

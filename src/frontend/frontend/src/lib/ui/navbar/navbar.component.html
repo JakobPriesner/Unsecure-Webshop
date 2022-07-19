@@ -38,7 +38,7 @@
         </ul>
         <ul class="nav-item navbar-nav gap-3">
           <li class="nav-item">
-            <div *ngIf="login">
+            <div *ngIf="login || loginAdmin">
               <a (click)="onLogOut()" type="button"><i class='fas fa-sign-out'></i></a>
             </div>
           </li>

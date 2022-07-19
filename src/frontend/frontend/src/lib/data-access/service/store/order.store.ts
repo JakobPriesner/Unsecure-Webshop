@@ -2,17 +2,17 @@ import {Order} from "../../models";
 import {ReplaySubject} from "rxjs";
 import {BackendService} from "../backend.service";
 import {Injectable} from "@angular/core";
+import {ShoppingCartStore} from "./shoppingCart.store";
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderStore {
-  // @ts-ignore
   orders: Order[] = [];
   ordersSubject: ReplaySubject<Order[]> = new ReplaySubject<Order[]>(1);
   orderWithBody: Order[] = [];
 
-  constructor(private backendService: BackendService) {
+  constructor(private backendService: BackendService, private shoppingCartStore: ShoppingCartStore) {
   }
 
   loadOrders(): ReplaySubject<Order[]> {
@@ -46,6 +46,7 @@ export class OrderStore {
     if( queryParamAmount != -1 ) order.amount = queryParamAmount;
     this.backendService.postOrder(order).subscribe(order => {
       orderSubject.next(order);
+      this.shoppingCartStore.itemList = [];
     })
     return orderSubject;
   }

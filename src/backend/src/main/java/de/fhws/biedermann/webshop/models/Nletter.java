@@ -1,6 +1,6 @@
 package de.fhws.biedermann.webshop.models;
 
-public class Nletter {
+public class Nletter implements IModel {
     String email;
 
     public Nletter(){

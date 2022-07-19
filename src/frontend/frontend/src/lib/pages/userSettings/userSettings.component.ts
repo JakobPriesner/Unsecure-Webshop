@@ -110,7 +110,7 @@ export class UserSettingsComponent implements OnInit {
     if (this.newPassword != "") {
       this.matchingNewPasswords = this.newPassword == this.newPasswordConfirm;
       this.fulfillsPasswordRequirements = this.validateNewPassword();
-      
+
       if (!this.matchingNewPasswords || !this.fulfillsPasswordRequirements) return;
     }
 

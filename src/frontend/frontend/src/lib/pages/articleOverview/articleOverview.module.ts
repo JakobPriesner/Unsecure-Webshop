@@ -23,6 +23,7 @@ const routes: Routes = [
     ColorCircleModule,
     FormsModule,
     CommonModule,
+    ColorCircleModule,
     RouterModule.forChild(routes),
     ButtonsModule.forRoot(),
     CarouselModule.forRoot(),

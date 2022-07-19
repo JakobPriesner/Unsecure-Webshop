@@ -2,7 +2,7 @@ package de.fhws.biedermann.webshop.models;
 
 import java.util.List;
 
-public class Order {
+public class Order implements IModel {
 
 	private int orderNumber;
 	private List<ArticleVersion> specifiedItems;

@@ -5,6 +5,7 @@ import {BsDropdownModule} from "ngx-bootstrap/dropdown";
 import {CommonModule} from "@angular/common";
 import {AccordionModule} from "ngx-bootstrap/accordion";
 import {FormsModule} from "@angular/forms";
+import {ModalModule} from "ngx-bootstrap/modal";
 
 
 const routes: Routes = [
@@ -13,7 +14,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [BiedisPageComponent],
-    imports: [RouterModule.forChild(routes), BsDropdownModule, CommonModule, AccordionModule, FormsModule],
+    imports: [RouterModule.forChild(routes), BsDropdownModule, CommonModule, AccordionModule, FormsModule, ModalModule],
   providers: [],
   bootstrap: [],
   exports: [BiedisPageComponent]

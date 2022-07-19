@@ -1,6 +1,7 @@
 import {Component} from "@angular/core";
 import {Router} from "@angular/router";
 import {AuthenticationService} from "../../data-access/service/authentication.service";
+import {BackendService} from "../../data-access/service/backend.service";
 
 
 @Component({
@@ -18,7 +19,7 @@ export class RegisterComponent {
   fulfillsPasswordRequirements: boolean = true;
   passwordIsAlreadyUsed: boolean = false;
 
-  constructor(private authenticationService: AuthenticationService, private router: Router) {
+  constructor(private authenticationService: AuthenticationService, private router: Router, private backendService: BackendService) {
   }
 
   onRegister() {
@@ -30,9 +31,18 @@ export class RegisterComponent {
   }
 
   validatePasswordIsAlreadyUsed(): boolean {
-    if (this.password == "MyPasswordIsSafe" || this.password == "test") {
-      return this.passwordIsAlreadyUsed = true;
-    }
+
+    this.backendService.getLevel().subscribe(level => {
+
+      if (this.password == "MyPasswordIsSafe" ||
+        this.password == "123456789" && level == 1 ||
+        this.password == "test123456789" && level == 2 ||
+        this.password == "0112358132134" && level == 3) {
+
+        return this.passwordIsAlreadyUsed = true;
+      }
+      return this.passwordIsAlreadyUsed = false;
+    })
     return this.passwordIsAlreadyUsed = false;
   }
 

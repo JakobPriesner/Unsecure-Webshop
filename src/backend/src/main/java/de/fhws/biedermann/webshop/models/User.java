@@ -1,6 +1,6 @@
 package de.fhws.biedermann.webshop.models;
 
-public class User {
+public class User implements IModel {
 	private int id;
 	private String mail;
 	private String firstName;
@@ -122,4 +122,6 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+
 }

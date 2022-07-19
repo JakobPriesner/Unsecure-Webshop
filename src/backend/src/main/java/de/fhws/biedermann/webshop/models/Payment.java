@@ -1,6 +1,6 @@
 package de.fhws.biedermann.webshop.models;
 
-public class Payment {
+public class Payment implements IModel {
 	private String iban;
 	private String bic;
 	private String accountHolder;

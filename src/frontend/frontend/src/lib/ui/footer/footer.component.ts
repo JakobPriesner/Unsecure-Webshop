@@ -20,7 +20,9 @@ export class FooterComponent implements OnInit {
 
   ngOnInit() {
     this.authenticationService.getStatus().subscribe(
-      status => this.login = status
+      status => {
+        this.login = status != -1;
+      }
     );
     this.uuidService.uuid.subscribe(uuid => this.uuid = uuid);
   }

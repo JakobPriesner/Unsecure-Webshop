@@ -23,9 +23,15 @@
     <h2 class="mb-4 d-flex justify-content-around" >Kundenrezensionen</h2>
     <article-overview-comment *ngFor="let comment of article.comments"
                               [comment]="comment"></article-overview-comment>
-    <div class="d-flex justify-content-center col align-items-center">
-      <h5 class="">Kommentar hinzufügen</h5>
-      <a (click)="openCommentField()" class="inputField button"><i class="fa-solid fa-comment-dots"></i></a>
+    <div class="d-flex justify-content-center row align-items-center">
+      <h5 class="">Kommentar hinzufügen <a (click)="showComment=true" class="inputField button"><i class="fa-solid fa-comment-dots"></i></a></h5>
+      <div *ngIf="showComment">
+        <textarea [(ngModel)]="comment" class="form-control" id="textAreaExample" rows="4"></textarea>
+        <button (click)="addComment()" class="btn btn-primary btn-block fa-lg mb-3 mt-2 m-1"
+        >Speichern</button>
+        <button (click)="stopComment()" class="btn btn-primary btn-block fa-lg mb-3 mt-2 m-1"
+        >Beenden</button>
+      </div>
     </div>
   </div>
 </div>

@@ -16,9 +16,7 @@ import {Statics} from "./statics";
 })
 export class AuthenticationService {
 
-  statusSubject: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
-  statusAdminSubject: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
-  userType: UserTypes = UserTypes.User;
+  statusSubject: ReplaySubject<number> = new ReplaySubject<number>(1);
   header: HttpHeaders = new HttpHeaders();
 
   constructor(
@@ -32,23 +30,25 @@ export class AuthenticationService {
     private cookieService: CookieService
   ) {
     if (this.cookieService.check("sessionKey")) {
-      this.statusSubject.next(true);
-      this.statusAdminSubject.next(true);
-    }else {
-      this.statusSubject.next(false);
-      this.statusAdminSubject.next(false);
+      if (this.cookieService.get("userType") == "" + UserTypes.Admin) {
+        this.statusSubject.next(UserTypes.Admin);
+      } else {
+        this.statusSubject.next(UserTypes.User)
+      }
+    } else {
+      this.statusSubject.next(-1);
     }
   }
 
   login(mail: string, password: string): Observable<boolean> {
-    return this.httpClient.get(Statics.url + 'user/login?mail=' + mail + '&password=' + password, {
+    return this.httpClient.get(Statics.url + 'users/login?mail=' + mail + '&password=' + password, {
       observe: "body", responseType: "text", headers: this.backendService.getHeader()
     }).pipe(
       map(sessionKey => {
         this.cookieService.set('sessionKey', sessionKey);
         this.backendService.sessionKey = sessionKey;
-        this.statusSubject.next(true);
-        this.userType = UserTypes.User;
+        this.statusSubject.next(UserTypes.User);
+        this.cookieService.set("userType", UserTypes.User.toString());
         return true;
       })
     );
@@ -57,18 +57,17 @@ export class AuthenticationService {
   logout(): Observable<any> {
     if (this.cookieService != undefined) {
       let sessionKey = this.cookieService.get('sessionKey').replace('sessionKey=', '');
-      return this.httpClient.post(Statics.url + 'user/logout', {sessionKey}, {
+
+      let response: Observable<any> = this.httpClient.post(Statics.url + 'users/logout', {sessionKey}, {
         headers: this.backendService.getHeader(),
         observe: "response",
-      }).pipe(
-        map(response => {
-          this.cookieService.delete('sessionKey');
-          this.backendService.sessionKey = "";
-          this.statusSubject.next(false);
-          this.userType = UserTypes.User;
-          this.cleanupStores();
-        })
-      );
+      });
+      this.cookieService.delete('sessionKey');
+      this.backendService.sessionKey = "";
+      this.statusSubject.next(-1);
+      this.cookieService.set("userType", UserTypes.User.toString());
+      this.cleanupStores();
+      return response;
     }
     return new Observable<any>();
   }
@@ -80,9 +79,8 @@ export class AuthenticationService {
       map(sessionKey => {
         this.cookieService.set("sessionKey", sessionKey);
         this.backendService.sessionKey = sessionKey;
-        this.statusSubject.next(true);
-        this.userType = UserTypes.Admin;
-        this.statusAdminSubject.next(true);
+        this.statusSubject.next(UserTypes.Admin);
+        this.cookieService.set("userType", UserTypes.Admin.toString());
       })
     );
   }
@@ -90,26 +88,24 @@ export class AuthenticationService {
   adminLogout(): Observable<any> {
     if (this.cookieService != undefined) {
       let sessionKey = this.cookieService.get('sessionKey').replace('sessionKey=', '');
-      return this.httpClient.post(Statics.url + 'admin/logout', {sessionKey}, {
+
+      let response: Observable<any> = this.httpClient.post(Statics.url + 'admin/logout', {sessionKey}, {
         headers: this.backendService.getHeader(),
         observe: "response"
-      }).pipe(
-        map(response => {
-          this.cookieService.delete('sessionKey');
-          this.statusSubject.next(false);
-          this.statusAdminSubject.next(false);
-          this.backendService.sessionKey = "";
-          this.userType = UserTypes.User;
-          this.cleanupStores();
-        })
-      );
+      });
+      this.cookieService.delete('sessionKey');
+      this.statusSubject.next(-1);
+      this.backendService.sessionKey = "";
+      this.cookieService.set("userType", UserTypes.User.toString());
+      this.cleanupStores();
+      return response;
     }
     return new Observable<any>();
 
   }
 
   register(firstname: string, lastname: string, mail: string, password: string): Observable<any> {
-    return this.httpClient.post(Statics.url + 'user/register', {
+    return this.httpClient.post(Statics.url + 'users/register', {
       "firstName": firstname,
       "lastName": lastname,
       "mail": mail,
@@ -117,19 +113,15 @@ export class AuthenticationService {
     }, {observe: "body", responseType: "text", headers: this.backendService.getHeader()}).pipe(
       map(sessionKey => {
         this.cookieService.set("sessionKey", sessionKey);
-        this.statusSubject.next(true);
+        this.statusSubject.next(UserTypes.User);
         this.backendService.sessionKey = sessionKey;
         return sessionKey;
       })
     );
   }
 
-  getStatus(): ReplaySubject<boolean> {
+  getStatus(): ReplaySubject<number> {
     return this.statusSubject;
-  }
-
-  getAdminStatus(): ReplaySubject<boolean>{
-    return this.statusAdminSubject;
   }
 
   cleanupStores(): void {
@@ -138,5 +130,6 @@ export class AuthenticationService {
     this.shoppingCartStore.cleaningUp();
     this.userStore.cleaningUp();
     this.wishlistStore.cleaningUp();
+    this.cookieService.set("userType", UserTypes.User.toString());
   }
 }

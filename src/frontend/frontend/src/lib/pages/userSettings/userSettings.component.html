@@ -28,10 +28,12 @@
               </label>
 
             </div>
-            <h5 class="user-name">{{ getUserName() }}</h5>
-            <h6 class="user-email">{{ this.user.mail }}</h6>
+            <div class="mt-5">
+              <h5 class="user-name">{{ getUserName() }}</h5>
+              <h6 class="user-email">{{ this.user.mail }}</h6>
+            </div>
           </div>
-          <div *ngIf="user.description" class="about">
+          <div *ngIf="user.description" class="about mt-5">
             <h5 *ngIf="user.description != ''" class="mb-2 text-primary">About</h5>
             <p id="descriptionField"></p>
           </div>
@@ -102,7 +104,7 @@
         </div>
         <div class="row gutters">
           <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-            <h6 class="mb-3">Addressen</h6>
+            <h6 class="mb-3 mt-3">Addressen</h6>
             <addresses (addAddressEvent)="onAddUserAddress()" *ngIf="addresses.length > 0; else noAddresses"
                        [addresses]="addresses">
             </addresses>

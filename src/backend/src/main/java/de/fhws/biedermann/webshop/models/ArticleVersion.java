@@ -1,6 +1,6 @@
 package de.fhws.biedermann.webshop.models;
 
-public class ArticleVersion { // specified Item in frontend
+public class ArticleVersion implements IModel { // specified Item in frontend
 
 	private int id; //Aus m zu n Table
 	private int articleNumber; //ID des article
