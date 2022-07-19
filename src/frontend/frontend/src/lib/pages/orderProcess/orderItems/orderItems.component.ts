@@ -10,16 +10,13 @@ import {BackendService} from "../../../data-access/service/backend.service";
 })
 export class OrderItemsComponent {
 
-  // @ts-ignore
-  @Input() itemList: SpecifiedItem[];
+  @Input() itemList: SpecifiedItem[] | undefined;
 
   @Output() onNextPageEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() onUpdateCouponEvent: EventEmitter<string> = new EventEmitter<string>();
 
   coupon: Coupon = {name: ""};
-
   couponPercent: number = 0;
-
   invalidCoupon: boolean = false;
 
   constructor(private shoppingCartStore: ShoppingCartStore, private backendService: BackendService) {
@@ -42,33 +39,31 @@ export class OrderItemsComponent {
     this.backendService.getCoupon(this.coupon.name).subscribe(coupon => {
       this.coupon = coupon;
       this.invalidCoupon = false;
-    }, (error) => {
+    }, () => {
       this.invalidCoupon = true;
     })
   }
 
   getAmount(): number {
     let totalAmount: number = 0;
-    for (let item of this.itemList) {
-      if (item.amount)
-        totalAmount += item.amount * item.quantity;
-    }
+    this.itemList?.forEach(item => {
+      totalAmount += (item.amount ?? 0) * (item.quantity ?? 0);
+    })
     return totalAmount;
   }
 
   getTotalAmount(): number {
     let totalAmount: number = this.getAmount();
-    if (this.coupon.percent) totalAmount -= this.coupon.percent * totalAmount / 100;
+    totalAmount -= (this.coupon.percent ?? 0) * totalAmount / 100;
     return totalAmount;
   }
 
   getPercentAmount(): number {
-    let totalAmount: number = this.getAmount();
-    if (this.coupon.percent) return this.coupon.percent * totalAmount / 100; else return 0;
+    return (this.coupon.percent ?? 0) * this.getAmount() / 100;
   }
 
   getCouponButtonText(): string {
-    if (this.coupon.percent) return "Ändern";
-    else return 'Einlösen';
+    if (this.coupon.percent) return "ändern";
+    else return 'einlösen';
   }
 }

@@ -47,7 +47,6 @@ import javax.ws.rs.core.UriInfo;
 		final Order order
 	)
 	{
-		order.setAmount( OrderState.computePrice( order.getSpecifiedItems() ) );
 		return new OrderState.Builder()
 			.withSession( session )
 			.withUuid( uuid )

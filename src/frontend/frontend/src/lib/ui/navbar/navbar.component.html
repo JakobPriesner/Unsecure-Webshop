@@ -13,8 +13,11 @@
         <li class="nav-item d-none d-lg-block">
           <a disabled>
             <div class="input-group">
-              <input (keydown.enter)="this.onSearchClick()" [(ngModel)]="searchInput" class="form-control me-2" placeholder="Na, was brauchst du..." type="text">
-              <button (click)="onSearchClick()" class="btn btn-secondary" type="button"><img src="../../../assets/icons/search.png" width="30px">
+              <input (keydown.enter)="this.onSearchClick()" [(ngModel)]="searchInput" class="form-control me-2"
+                     placeholder="Na, was brauchst du..." type="text">
+              <button (click)="onSearchClick()" class="btn btn-secondary" type="button"><img alt="search-icon"
+                                                                                             src="../../../assets/icons/search.png"
+                                                                                             width="30px">
               </button>
             </div>
           </a>

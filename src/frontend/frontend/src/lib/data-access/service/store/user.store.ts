@@ -1,16 +1,14 @@
 import {Injectable} from "@angular/core";
-import {User} from "../../models";
+import {Nletter, User} from "../../models";
 import {BackendService} from "../backend.service";
 import {Observable, ReplaySubject} from "rxjs";
 import {CookieService} from "ngx-cookie-service";
-import {Nletter} from "../../models/nletter";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserStore {
 
-  // @ts-ignore
   user: User | undefined;
   userSubject: ReplaySubject<User | undefined> = new ReplaySubject<User | undefined>(1);
 

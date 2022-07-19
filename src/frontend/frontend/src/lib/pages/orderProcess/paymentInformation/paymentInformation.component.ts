@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {Payment} from "../../../data-access/models";
+import {Order, Payment} from "../../../data-access/models";
 
 @Component({
   selector: 'payment-information',
@@ -7,9 +7,8 @@ import {Payment} from "../../../data-access/models";
   styleUrls: ['./paymentInformation.component.scss']
 })
 export class PaymentInformationComponent {
-  // @ts-ignore
-  @Input order;
 
+  @Input() order: Order | undefined;
   @Output() onBuyEvent: EventEmitter<Payment> = new EventEmitter<Payment>();
 
   iban: string = "";
@@ -23,11 +22,15 @@ export class PaymentInformationComponent {
   }
 
   onBuy(): void {
-    if (!this.iban || !this.bic || !this.accountHolder) {
+    if (this.invalidInputData()) {
       this.invalidData = true;
     } else {
       this.onBuyEvent.emit({iban: this.iban, bic: this.bic, accountHolder: this.accountHolder});
     }
-
   }
+
+  private invalidInputData(): boolean {
+    return !this.iban || !this.bic || !this.accountHolder;
+  }
+
 }

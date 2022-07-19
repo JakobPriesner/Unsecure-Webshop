@@ -1,8 +1,9 @@
 <div *ngIf="this.comment" class="card">
   <div class="card-header">
-    <div class="row" (click)="redirectToUser( comment )">
+    <div class="row">
       <img *ngIf="this.comment.profilePicture; else defaultPicture" [src]="this.comment.profilePicture"
-           class="col">
+           alt="profile-picture"
+           class="col" routerLink="/user/{{this.comment.userId}}">
       <h5 class="d-flex col align-items-center">{{this.getUserName()}}</h5>
     </div>
   </div>

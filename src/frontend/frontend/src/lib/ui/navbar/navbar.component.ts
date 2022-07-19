@@ -39,7 +39,7 @@ export class NavbarComponent implements OnInit {
 
   onSearchClick() {
     if (this.searchInput != "") {
-      this.router.navigateByUrl('/articles?search=' + this.searchInput);
+      this.router.navigateByUrl!('/articles?search=' + this.searchInput);
     }
   }
 }

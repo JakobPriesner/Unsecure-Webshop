@@ -9,7 +9,7 @@ import {SpecifiedItem} from "src/lib/data-access/models";
 export class SpecifiedItemListComponent {
   @Input() showDeleteButton: boolean = true;
   @Input() editableQuantity: boolean = true;
-  @Input() itemList: SpecifiedItem[] = [];
+  @Input() itemList: SpecifiedItem[] | undefined = [];
   @Input() showAddCartButton: boolean = false;
 
   @Output() onDeleteEvent: EventEmitter<number> = new EventEmitter<number>();

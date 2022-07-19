@@ -20,6 +20,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [ArticleOverviewComponent, SpecificationsComponent, OverviewComponent, ImageSectionComponent, CommentComponent],
   imports: [
+    ColorCircleModule,
     FormsModule,
     CommonModule,
     ColorCircleModule,

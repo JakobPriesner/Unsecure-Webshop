@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {CookieService} from "ngx-cookie-service";
 import {Observable, ReplaySubject} from "rxjs";
-import {Uuid} from "../models/uuid";
+import {Uuid} from "../models";
 import {HttpClient} from "@angular/common/http";
 import {Statics} from "./statics";
 

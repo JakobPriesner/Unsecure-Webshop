@@ -1,7 +1,7 @@
 import {Component, TemplateRef} from '@angular/core';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {UserStore} from "../../data-access/service/store/user.store";
-import {Nletter} from "../../data-access/models/nletter";
+import {Nletter} from "../../data-access/models";
 
 @Component({
   selector: 'newsletter',

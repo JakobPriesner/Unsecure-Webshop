@@ -49,8 +49,7 @@ public class UserState extends AbstractState
 
 			if( this.responseBody instanceof UserVulnerability )
 				FlawHandler.sqlInjection( uuid );
-		} else if ( (this.modelToWorkWith instanceof Nletter nletter ))
-		{
+		} else if ( (this.modelToWorkWith instanceof Nletter nletter )) {
 			if(!nletter.getEmail( ).contains( "@" ) && StringUtils.isNotEmpty( nletter.getEmail( ) )) {
 				FlawHandler.emailWithoutAt(uuid);
 			}

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {Article} from "../../../data-access/models/article";
+import {Article} from "../../../data-access/models";
 
 @Component({
   selector: 'article-overview-overview',
@@ -7,18 +7,15 @@ import {Article} from "../../../data-access/models/article";
   styleUrls: ['./overview.component.scss']
 })
 export class OverviewComponent {
-  // @ts-ignore
-  @Input article: Article;
-
-  // @ts-ignore
-  quntity: number = 1;
+  @Input() article: Article | undefined;
+  quantity: number = 1;
 
   @Output() changeQuantityEvent: EventEmitter<number> = new EventEmitter<number>();
   @Output() addToShoppingCartEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() addToWishListEvent: EventEmitter<any> = new EventEmitter<any>();
 
   onChangeQuantity(): void {
-    this.changeQuantityEvent.emit(this.quntity);
+    this.changeQuantityEvent.emit(this.quantity);
   }
 
   onAddToWishList(): void {

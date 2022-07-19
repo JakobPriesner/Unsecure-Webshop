@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from "@angular/core";
+import {Component, EventEmitter, Output} from "@angular/core";
 
 @Component({
   selector: 'delete',
@@ -8,8 +8,8 @@ import {Component, EventEmitter, Input, Output} from "@angular/core";
 export class DeleteButtonComponent {
   @Output() onClickEvent: EventEmitter<string> = new EventEmitter<string>();
 
-  onClick( ): void {
-    this.onClickEvent.emit( );
+  onClick(): void {
+    this.onClickEvent.emit();
   }
 
 }

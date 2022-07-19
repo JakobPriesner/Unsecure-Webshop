@@ -11,8 +11,7 @@ import {Router} from "@angular/router";
 
 export class MessageAlertsComponent implements OnInit {
 
-  // @ts-ignore
-  @ViewChild("alertSection") alertSectionRef: ElementRef;
+  @ViewChild("alertSection") alertSectionRef: ElementRef | undefined;
 
   constructor(private alertStore: AlertMessagesStore, private toast: ToastrService, private routing: Router) {
   }
@@ -20,8 +19,8 @@ export class MessageAlertsComponent implements OnInit {
   ngOnInit(): void {
     this.alertStore.alertSubject.subscribe(alert => {
       let toast = this.toast.success(alert, "Schwachstelle gefunden!");
-      toast.onTap.subscribe((action) => {
-        this.routing.navigateByUrl('/' + alert);
+      toast.onTap.subscribe(() => {
+        this.routing.navigateByUrl!('/' + alert);
       })
     });
   }

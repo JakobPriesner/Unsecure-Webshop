@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {map, Observable} from "rxjs";
-import {Address, Article, Commentary, Contact, Coupon, Order, SpecifiedItem, User} from "../models";
+import {Address, Article, Contact, Coupon, Order, SpecifiedItem, User} from "../models";
 import {RankingStudent} from "../models/rankingStudent";
 import {JsonObject} from "@angular/compiler-cli/ngcc/src/utils";
 import {CookieService} from "ngx-cookie-service";
@@ -72,22 +72,22 @@ export class BackendService {
       "zipCode": address.zipCode,
       "city": address.city
     };
-    return this.httpClient.post<Address>(Statics.url + 'users/addresses', addressPayload, {headers: this.getHeader()});
+    return this.httpClient.post<Address>(Statics.url + 'user/addresses', addressPayload, {headers: this.getHeader()});
   }
 
   loadAddressById(id: number): Observable<Address> {
-    return this.httpClient.get<Address>(Statics.url + 'users/addresses/' + id, {headers: this.getHeader()});
+    return this.httpClient.get<Address>(Statics.url + 'user/addresses/' + id, {headers: this.getHeader()});
   }
 
   loadAllAddresses(): Observable<Address[]> {
-    return this.httpClient.get<Address[]>(Statics.url + 'users/addresses', {headers: this.getHeader()});
+    return this.httpClient.get<Address[]>(Statics.url + 'user/addresses', {headers: this.getHeader()});
   }
 
   updateAddress(address: Address): Observable<any> {
     let addressPayload = {
       ...address
     };
-    return this.httpClient.put(Statics.url + 'users/addresses/' + address.id, addressPayload, {headers: this.getHeader()});
+    return this.httpClient.put(Statics.url + 'user/addresses/' + address.id, addressPayload, {headers: this.getHeader()});
   }
 
   loadShoppingCart(): Observable<SpecifiedItem[]> {
@@ -147,27 +147,29 @@ export class BackendService {
   }
 
   updateUser(userPayload: JsonObject): Observable<User> {
-    return this.httpClient.put<User>(Statics.url + 'users', userPayload, {headers: this.getHeader()});
+    return this.httpClient.put<User>(Statics.url + 'user', userPayload, {headers: this.getHeader()});
   }
 
   getNewsletterStatus(): Observable<boolean> {
-    return this.httpClient.get<boolean>(Statics.url + 'users/newsletter', {headers: this.getHeader()});
+    return this.httpClient.get<string>(Statics.url + 'user/newsletter', {headers: this.getHeader()}).pipe(
+      map(value => value == "true")
+    );
   }
 
   postNewsletter(newsLetter: Nletter): Observable<any> {
-    return this.httpClient.post<any>(Statics.url + 'users/newsletter', {...newsLetter}, {headers: this.getHeader()});
+    return this.httpClient.post<any>(Statics.url + 'user/newsletter', {...newsLetter}, {headers: this.getHeader()});
   }
 
   deleteNewsletter(): Observable<any> {
-    return this.httpClient.delete(Statics.url + 'users/newsletter', {headers: this.getHeader()});
+    return this.httpClient.delete(Statics.url + 'user/newsletter', {headers: this.getHeader()});
   }
 
   loadUser(): Observable<User> {
-    return this.httpClient.get<User>(Statics.url + 'users', {headers: this.getHeader()});
+    return this.httpClient.get<User>(Statics.url + 'user', {headers: this.getHeader()});
   }
 
   loadUserById(id: number): Observable<User> {
-    return this.httpClient.get<User>(Statics.url + 'users/' + id, {headers: this.getHeader()});
+    return this.httpClient.get<User>(Statics.url + 'user/' + id, {headers: this.getHeader()});
   }
 
   searchArticles(searchInput: string): Observable<Article[]> {
@@ -202,10 +204,6 @@ export class BackendService {
     } else {
       return new HttpHeaders();
     }
-  }
-
-  postCommentToArticle(commentary: Commentary, articleId: number): Observable<any>{
-    return this.httpClient.post(Statics.url + 'comments?articleId=' + articleId, {...commentary},{headers: this.getHeader()} );
   }
 
 }

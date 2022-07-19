@@ -1,7 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {ArticleStore} from "../../data-access/service/store/article.store";
 import {Article} from "../../data-access/models";
-import {NewsletterComponent} from "../../ui/newsletter/newsletter.component";
 
 
 @Component({
@@ -12,8 +11,7 @@ import {NewsletterComponent} from "../../ui/newsletter/newsletter.component";
 
 export class BoardComponent implements OnInit {
 
-  // @ts-ignore
-  articles: Article[];
+  articles: Article[] | undefined;
 
   constructor(private articleStore: ArticleStore) {
   }

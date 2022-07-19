@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {Article} from "../../../data-access/models";
+import {Article, Commentary} from "../../../data-access/models";
 
 @Component({
   selector: 'article-overview-specifications',
@@ -7,8 +7,7 @@ import {Article} from "../../../data-access/models";
   styleUrls: ['./specifications.component.scss']
 })
 export class SpecificationsComponent {
-  // @ts-ignore
-  @Input article: Article;
+  @Input() article: Article | undefined;
   @Output() colorChangedEvent: EventEmitter<string> = new EventEmitter<string>();
   @Output() storageChangeEvent: EventEmitter<number> = new EventEmitter<number>();
 
@@ -20,4 +19,23 @@ export class SpecificationsComponent {
     this.storageChangeEvent.emit(value);
   }
 
+  getArticleBrand(): string {
+    return this.article?.brand ?? "unbekannt";
+  }
+
+  getArticleStars(): number {
+    return this.article?.stars ?? -1;
+  }
+
+  getArticleScreen(): string {
+    return this.article?.screen ?? "unbekannt";
+  }
+
+  getArticleResolution(): string {
+    return this.article?.resolution ?? "unbekannt";
+  }
+
+  getArticleComments(): Commentary[] {
+    return this.article?.comments ?? [];
+  }
 }

@@ -306,6 +306,7 @@ import static de.fhws.biedermann.webshop.api.states.UserState.createNewUser;
 		return new UserState.Builder()
 			.withSession( session )
 			.withUuid( uuid )
+			.withModel( nletter )
 			.defineResponseBody( DataHandler.turnOnNewsletter(session) )
 			.build()
 			.noContent();

@@ -42,7 +42,7 @@
             <alert>"Abonnieren nicht möglich, da keine Email angegeben wurde.</alert>
           </ng-template>
           <div *ngIf="this.user.mail; else noMail" class="form-check form-switch">
-            <input (click)="onNewsletter(this.user.mail)" [checked]="newsletter" class="form-check-input"
+            <input (click)="onNewsletter(this.user.mail)" [checked]="subscribedToNewsletter" class="form-check-input"
                    id="flexSwitchChecked"
                    type="checkbox">
             <label class="form-check-label" for="flexSwitchChecked">Newsletter angemeldet</label>

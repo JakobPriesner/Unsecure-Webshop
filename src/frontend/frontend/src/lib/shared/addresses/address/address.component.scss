@@ -1,4 +1,3 @@
-@import "node_modules/bootstrap/scss/bootstrap";
 
 .border {
   border-radius: 2rem;
@@ -12,7 +11,7 @@
 }
 
 .shadow-primary {
-  box-shadow: 0 0 0.75rem 0 $primary;
+  box-shadow: 0 0 0.75rem 0 #0d6efd;
 }
 
 button {

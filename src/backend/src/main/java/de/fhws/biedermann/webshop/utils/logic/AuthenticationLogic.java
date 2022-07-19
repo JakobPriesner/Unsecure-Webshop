@@ -34,14 +34,14 @@ public class AuthenticationLogic
 			if ( AdminLogic.getInstance().getLevel() < 2 )
 			{
 				if ( session == AuthorizationType.FALSE_PASSWORD )
-					throw new WebApplicationException( Response.status( Response.Status.BAD_REQUEST ).entity( "Das " +
+					throw new WebApplicationException( Response.status( Response.Status.UNAUTHORIZED ).entity( "Das " +
 						"Passwort stimmt nicht mit dem Benutzer überein! Versuche es erneut." ).build() );
 				else
-					throw new WebApplicationException( Response.status( Response.Status.BAD_REQUEST ).entity( "Der " +
+					throw new WebApplicationException( Response.status( Response.Status.UNAUTHORIZED ).entity( "Der " +
 						"Benutzer existiert nicht! Versuche es erneut." ).build() );
 			}
 			else
-				throw new WebApplicationException( Response.status( Response.Status.BAD_REQUEST ).entity( "Benutzer" +
+				throw new WebApplicationException( Response.status( Response.Status.UNAUTHORIZED ).entity( "Benutzer" +
 					" oder Passwort falsch! Versuche es erneut." ).build() );
 		} else if (session == AuthorizationType.AUTHORIZED_DUMMY_USER) {
 			FlawHandler.guessUserLogin( uuid );

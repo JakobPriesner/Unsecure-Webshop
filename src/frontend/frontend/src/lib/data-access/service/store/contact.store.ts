@@ -1,7 +1,6 @@
-import {Contact, Nletter} from "../../models";
+import {Contact} from "../../models";
 import {BackendService} from "../backend.service";
 import {Injectable} from "@angular/core";
-import {Router} from "@angular/router";
 import {Observable} from "rxjs";
 
 @Injectable({

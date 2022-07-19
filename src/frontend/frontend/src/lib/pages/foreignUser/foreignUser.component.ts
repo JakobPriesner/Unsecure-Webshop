@@ -1,5 +1,4 @@
 import {Component, OnInit} from "@angular/core";
-import {DomSanitizer} from "@angular/platform-browser";
 import {ForeignUserStore} from "../../data-access/service/store/foreignUser.store";
 import {ActivatedRoute} from "@angular/router";
 import {User} from "../../data-access/models";
@@ -11,10 +10,10 @@ import {User} from "../../data-access/models";
 })
 export class ForeignUserComponent implements OnInit {
 
-  // @ts-ignore
-  user: User;
+  user: User | undefined = undefined;
 
-  constructor(private foreignUserStore: ForeignUserStore, private route: ActivatedRoute, private sanitizer: DomSanitizer) {
+  constructor(private foreignUserStore: ForeignUserStore,
+              private route: ActivatedRoute) {
   }
 
   ngOnInit() {

@@ -13,11 +13,9 @@ export class AddressListComponent implements OnInit {
   @Output() addAddressEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() onSelectAddressEvent: EventEmitter<Address> = new EventEmitter<Address>();
 
-  // @ts-ignore
-  selectedAddress: Address;
+  selectedAddress: Address | undefined;
 
   constructor(private addressStore: AddressStore) {
-
   }
 
   ngOnInit() {

@@ -1,7 +1,7 @@
-import {Component, OnInit, TemplateRef} from "@angular/core";
+import {Component, OnDestroy, OnInit, TemplateRef} from "@angular/core";
 import {BackendService} from "../../data-access/service/backend.service";
 import {BsModalRef, BsModalService} from "ngx-bootstrap/modal";
-import {RankingStudent} from "../../data-access/models/rankingStudent";
+import {RankingStudent} from "../../data-access/models";
 import {Router} from "@angular/router";
 
 @Component({
@@ -10,9 +10,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./biedisPage.component.scss']
 })
 
-export class BiedisPageComponent implements OnInit{
-
-
+export class BiedisPageComponent implements OnInit, OnDestroy{
   rankingStudents: RankingStudent[] | undefined;
   actualStudent: RankingStudent | undefined;
   modalRef?: BsModalRef;
@@ -20,8 +18,13 @@ export class BiedisPageComponent implements OnInit{
   levelNumber: number = 1;
   description: Map<number,string[]> = new Map();
   levelNames: string[] = ["Beginner", "Tutor", "Endboss"];
+  updateInterval: any;
 
   constructor(private backendService: BackendService, private modalService: BsModalService, private router: Router) {
+  }
+
+  ngOnDestroy() {
+    clearInterval( this.updateInterval );
   }
 
   ngOnInit() {
@@ -30,11 +33,9 @@ export class BiedisPageComponent implements OnInit{
       this.level = this.levelNames[levelNumber-1];
       this.onLevelChange(this.levelNumber);
     });
-
-
+    this.updateInterval = setInterval(() => this.updateRanking(), 5000);
     this.backendService.getLevel().subscribe(levelNumber => this.levelNumber = levelNumber);
     this.backendService.loadRankingStudents().subscribe(rankingStudents => this.rankingStudents = rankingStudents);
-    this.reloadRanking();
   }
 
   onLevelChange(level: number){
@@ -230,10 +231,8 @@ export class BiedisPageComponent implements OnInit{
     })
   }
 
-  reloadRanking() {
-      setInterval(function(){
-      }, 10000);
-      this.backendService.loadRankingStudents().subscribe(rankingStudents => this.rankingStudents = rankingStudents);
+  updateRanking() {
+    this.backendService.loadRankingStudents().subscribe(rankingStudents => this.rankingStudents = rankingStudents);
   }
 
   getSecurityBreaches(rankingStudent: RankingStudent): number{
@@ -281,7 +280,7 @@ export class BiedisPageComponent implements OnInit{
   }
 
   onRankingReset() {
-    this.backendService.rankingReset().subscribe();
+    this.backendService.rankingReset().subscribe( () => this.updateRanking());
   }
 
   onRedirectToFlawDescription( flaw: string ): void {

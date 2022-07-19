@@ -1,6 +1,4 @@
 import {Component} from "@angular/core";
-import {ArticleStore} from "../../data-access/service/store/article.store";
-import {Article} from "../../data-access/models";
 
 @Component({
   selector: 'navbar-items',
