@@ -4,6 +4,7 @@ import de.fhws.biedermann.webshop.models.RankingRow;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,8 @@ public class DataAccessAdminPanel {
         Connection c = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            Path currentRelativePath = FileSystems.getDefault( ).getPath( "" );
-            c = DriverManager.getConnection( String.format( "jdbc:sqlite:%s/src/main/java/de/fhws/biedermann/webshop/database/adminPanel.db", currentRelativePath.toAbsolutePath() ) );
+            Path currentPath = Paths.get(System.getProperty("user.dir"));
+            c = DriverManager.getConnection( String.format( "jdbc:sqlite:%s/adminPanel.db", currentPath.toAbsolutePath() ) );
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             System.out.println("Can't create Connection!");

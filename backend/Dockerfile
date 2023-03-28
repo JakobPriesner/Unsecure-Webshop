@@ -14,12 +14,16 @@ RUN if [ ! -d "/app/target" ]; then mkdir /app/target; fi && \
 
 
 # Run Step
-FROM openjdk:21-slim-buster
+FROM tomcat:10.0.11-jdk16-corretto
 
 WORKDIR /app
 
 COPY --from=build /app/target/progPorj-1.0-SNAPSHOT.jar /app/progPorj.jar
+COPY --from=build /app/target/progPorj-1.0-SNAPSHOT.jar /usr/local/tomcat/webapps/
 
-ENV CLASSPATH=/usr/local/tomcat/lib/*:$CLASSPATH
+# ENV CLASSPATH=/usr/local/tomcat/lib/*:$CLASSPATH
 
-CMD ["java", "-cp", "progPorj.jar", "de.fhws.biedermann.webshop.Start"]
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
+#CMD ["java", "-cp", "progPorj.jar", "de.fhws.biedermann.webshop.Start"]

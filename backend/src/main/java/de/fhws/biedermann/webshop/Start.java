@@ -7,15 +7,19 @@ import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import de.fhws.biedermann.webshop.database.*;
 
 public class Start
 {
+	static final Path currentPath = Paths.get(System.getProperty("user.dir"));
+	static final Path webappPath = currentPath.resolve("backend/src/main/webapp");
 	private static final String CONTEXT_PATH = "/api";
-	private static final String WEB_APP_LOCATION = "src/main/webapp/";
+	private static final String WEB_APP_LOCATION = webappPath.toString();
 	private static final String WEB_APP_MOUNT = "/WEB-INF/classes";
-	private static final String WEB_APP_CLASSES = "target/classes";
+	private static final String WEB_APP_CLASSES = "backend/target/classes";
 
 	public static void main(final String[] args) throws Exception
 	{
@@ -23,7 +27,6 @@ public class Start
 		db.resetDatabase();
 		DataAccessAdminPanel daap = new DataAccessAdminPanel();
 		daap.resetDatabase();
-		System.out.println("Database reset");
 
 		final Tomcat tomcat = new Tomcat();
 		tomcat.setPort(8080);
