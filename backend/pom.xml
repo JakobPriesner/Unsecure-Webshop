@@ -13,6 +13,22 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.2</version>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>src/main/webapp</directory>
+                            <targetPath>WEB-INF/classes</targetPath>
+                            <includes>
+                                <include>**/*</include>
+                            </includes>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
@@ -142,8 +158,8 @@
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
-        <tomcat.version>9.0.53</tomcat.version>
-        <jersey.version>2.34</jersey.version>
+        <tomcat.version>8.5.13</tomcat.version>
+        <jersey.version>2.31</jersey.version>
     </properties>
 
 </project>
