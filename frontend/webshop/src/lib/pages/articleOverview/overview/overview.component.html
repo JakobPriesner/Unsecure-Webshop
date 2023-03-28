@@ -1,0 +1,34 @@
+<div class="d-flex flex-column p-4 border border-2 rounded-3 gap-4">
+  <h2>{{article.amount}}€</h2>
+
+  <ng-template #notAvailable>
+    <h3 class="text-danger bold">Ausverkauft.</h3>
+  </ng-template>
+
+  <div *ngIf="article" class="form-floating">
+    <select (click)="onChangeQuantity()" [(ngModel)]="quntity" class="form-select" id="sel1" name="sellist">
+      <option *ngFor="let index of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]">{{index}}</option>
+    </select>
+    <label class="form-label" for="sel1">Menge:</label>
+  </div>
+
+  <button (click)="onAddToShoppingCart()" class="btn btn-primary" type="button">In den Einkaufswagen</button>
+
+  <div *ngIf="article.stars" class="d-flex justify-content-between align-items-center ps-4 pe-4">
+    <img *ngFor="let item of [].constructor(article.stars)" alt="star"
+         src="../../../../assets/star.svg" width="50rem">
+    <img *ngFor="let item of [].constructor(5 - article.stars)" alt="outlinedStar"
+         src="../../../../assets/star_outline.svg"
+         width="50rem">
+  </div>
+
+  <div class="d-flex flex-column ps-4">
+    <span *ngFor="let text of ['pro Verkauf ein Baum', 'Gratis Rückversand', '30 Tage Rückgaberecht']">
+      <img alt="done" src="../../../../assets/done_black.svg">
+      {{text}}
+    </span>
+  </div>
+
+  <button (click)="onAddToWishList()" class="btn btn-primary" type="button">Auf die Wunschliste</button>
+
+</div>

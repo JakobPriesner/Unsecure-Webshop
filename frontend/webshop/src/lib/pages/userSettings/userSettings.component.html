@@ -1,0 +1,173 @@
+<div class="col text-end">
+  <button class="btn-sm btn-primary text-white rounded-pill"
+          routerLink="/orders"
+          style="font-weight: bold"
+          type="button">
+    <span>Letzte Bestellungen</span>
+    <img alt="" src="../../../assets/icons/list_white_opsz24.ico">
+  </button>
+</div>
+<h2>Nutzer Einstellungen</h2>
+<div *ngIf="user && addresses" class="row gutters">
+  <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="account-settings">
+          <div class="user-profile">
+            <div class="user-avatar">
+              <img *ngIf="user.profilePicture; else defaultPicture" [alt]="getUserName()"
+                   [src]="user.profilePicture"
+                   class="rounded w-100">
+              <ng-template #defaultPicture>
+                <img alt="default user" class="rounded w-100" src="../../../assets/user.svg">
+              </ng-template>
+              <br>
+              <label class="btn btn-primary w-100">
+                <input (change)="onUpdateProfilePicture($event)" type="file"/>
+                Profielbild ändern
+              </label>
+
+            </div>
+            <div class="mt-5">
+              <h5 class="user-name">{{ getUserName() }}</h5>
+              <h6 class="user-email">{{ this.user.mail }}</h6>
+            </div>
+          </div>
+          <div *ngIf="user.description" class="about mt-5">
+            <h5 *ngIf="user.description != ''" class="mb-2 text-primary">About</h5>
+            <p id="descriptionField"></p>
+          </div>
+
+          <ng-template #noMail>
+            <alert>"Abonnieren nicht möglich, da keine Email angegeben wurde.</alert>
+          </ng-template>
+          <div *ngIf="this.user.mail; else noMail" class="form-check form-switch">
+            <input (click)="onNewsletter(this.user.mail)" [checked]="newsletter" class="form-check-input"
+                   id="flexSwitchChecked"
+                   type="checkbox">
+            <label class="form-check-label" for="flexSwitchChecked">Newsletter angemeldet</label>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+    <div class="card h-100">
+      <div class="card-body">
+        <div class="row gutters">
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <label for="salutation">Anrede</label>
+              <select [(ngModel)]="user.salutation" class="form-control" id="salutation">
+                <option *ngFor="let opt of ['Herr', 'Frau', 'Divers']">{{opt}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <label for="title">Titel</label>
+              <select [(ngModel)]="user.title" class="form-control" id="title">
+                <option *ngFor="let opt of ['', 'Dr.', 'Prof.', 'Prof. Dr.']">{{opt}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <label for="fistName">Vorname</label>
+              <input [(ngModel)]="user.firstName" class="form-control" id="fistName"
+                     placeholder="Gib deinen Vornamen ein"
+                     type="text">
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <label for="lastName">Nachname</label>
+              <input [(ngModel)]="user.lastName" class="form-control" id="lastName"
+                     placeholder="Gib deinen Nachnamen ein"
+                     type="text">
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <label for="mail">E-Mail</label>
+              <input [(ngModel)]="user.mail" class="form-control" id="mail" placeholder="Gib deine Mail Adresse ein"
+                     type="mail">
+            </div>
+          </div>
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <label for="mail">Beschreibung</label>
+            <textarea [(ngModel)]="user.description" class="form-control"
+                      rows="5">
+            </textarea>
+          </div>
+        </div>
+        <div class="row gutters">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <h6 class="mb-3 mt-3">Addressen</h6>
+            <addresses (addAddressEvent)="onAddUserAddress()" *ngIf="addresses.length > 0; else noAddresses"
+                       [addresses]="addresses">
+            </addresses>
+
+            <ng-template #noAddresses>
+              <alert type="info">
+                Du hast noch keine Addresses angelegt.
+                <button (click)="onAddUserAddress()" class="btn btn-info" type="button">Klick hier</button>
+                um eine anzulegen.
+              </alert>
+            </ng-template>
+          </div>
+
+        </div>
+        <hr class="my-4"/>
+        <div class="row mb-4">
+          <alert *ngIf="!matchingNewPasswords" type="danger">
+            <strong>Fehler!</strong> Die neuen Kennwörter stimmen nicht überein!
+          </alert>
+          <alert *ngIf="!fulfillsPasswordRequirements" type="danger">
+            <strong>Fehler!</strong> Das neue Kennwort erfüllt nicht alle Voraussetzungen!
+          </alert>
+          <alert *ngIf="!validOldPassword" type="danger">
+            <strong>Fehler!</strong> Das alte Kennwort ist falsch!
+          </alert>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="oldPassword">Altes Passwort</label>
+              <input class="form-control" id="oldPassword" type="password"/>
+            </div>
+            <div class="form-group">
+              <label for="newPassword">Neues Passwort</label>
+              <input [(ngModel)]="newPassword" class="form-control was-validated" id="newPassword"
+                     type="password">
+            </div>
+            <div class="form-group">
+              <label for="confirmNewPassword">Neues Passwort bestätigen</label>
+              <input [(ngModel)]="newPasswordConfirm" class="form-control" id="confirmNewPassword" type="password"/>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <p class="mb-2">Passwort Anforderungen</p>
+            <p class="small text-muted mb-2">Um ein neues Passwort zu erstellen, musst Du alle folgenden
+              Voraussetzungen erfüllen
+              Anforderungen erfüllen:</p>
+            <ul class="small text-muted pl-4 mb-0">
+              <li [ngClass]="validateNewPasswordEightChars() ? 'text-success' : ''">Mindestens 8 Zeichen</li>
+              <li [ngClass]="validateNewPasswordSpecialChars() ? 'text-success' : ''">Mindestens ein Sonderzeichen
+              </li>
+              <li [ngClass]="validateNewPasswordOneNumber() ? 'text-success' : ''">Mindestens eine Nummer</li>
+            </ul>
+          </div>
+        </div>
+        <div class="row gutters">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="btn-group text-right float-end">
+              <button class="btn btn-secondary" name="submit" type="button">abbrechen</button>
+              <button (click)="onSubmit()" class="btn btn-primary" id="submit" name="submit" type="button">speichern
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

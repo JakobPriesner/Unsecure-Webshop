@@ -1,0 +1,83 @@
+<div (click)="onSelect()"
+     [ngClass]="isSelected() ? 'shadow-primary' : ''" class="border border-3 border-secondary">
+  <div class="content row">
+    <div>{{address.name}}</div>
+    <div>{{address.address}}</div>
+    <div *ngIf="address.address2">{{address.address2}}</div>
+    <div>{{address.zipCode}} {{address.city}}</div>
+    <div>{{address.country}}</div>
+    <div *ngIf="address.address2 == ''"><br></div>
+  </div>
+  <button (click)="onEditAddressEvent(editAddress)" class="btn row">
+    <img alt="edit" src="../../../../assets/edit.svg">
+  </button>
+</div>
+
+<ng-template #editAddress>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Addresse bearbeiten</h4>
+    <button (click)="modalRef?.hide()" aria-label="Close" class="btn-close close pull-right" type="button">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-lg">
+    <div class="row gutters">
+      <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="row gutters">
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input [(ngModel)]="address.name" class="form-control" id="name"
+                         placeholder="Gib deinen Namen ein"
+                         type="text">
+                </div>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group">
+                  <label for="address">Adresse & Hausnummer</label>
+                  <input [(ngModel)]="address.address" class="form-control" id="address"
+                         placeholder="Gib eine Addresse mit Hausnummer ein"
+                         type="text">
+                </div>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group">
+                  <label for="address2">Address Zusatz</label>
+                  <input [(ngModel)]="address.address2" class="form-control" id="address2"
+                         placeholder="Gib einen Address Zusatz ein"
+                         type="mail">
+                </div>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                <label for="zipCode">Postleitzahl</label>
+                <input [(ngModel)]="address.zipCode" class="form-control" id="zipCode"
+                       placeholder="Gib eine Postleitzahl ein"
+                       type="number">
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                <label for="city">Stadt</label>
+                <input [(ngModel)]="address.city" class="form-control" id="city"
+                       placeholder="Gib eine Stadt ein"
+                       type="text">
+              </div>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <label for="country">Land</label>
+                <input [(ngModel)]="address.country" class="form-control" id="country"
+                       placeholder="Gib ein Land ein"
+                       type="text">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="btn-group float-end">
+      <button (click)="onCancel()" class="btn btn-secondary" name="submit" type="button">abbrechen</button>
+      <button (click)="onSubmit()" class="btn btn-primary" id="submit" name="submit" type="button">speichern</button>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col" style="font-size: xx-large">
+    Mein Warenkorb
+    <img src="../../../assets/shopping_cart_opsz40.svg" type="cart"/>
+  </div>
+</div>
+<div *ngIf="this.itemList != undefined">
+  <div *ngIf="this.itemList.length != 0; else emptyShoppingCart">
+    <specified-item-list
+      (onDeleteEvent)="onItemDelete($event)"
+      (onQuantityChangeEvent)="onItemChange($event)"
+      [itemList]="itemList">
+    </specified-item-list>
+    <div class="d-flex flex-row-reverse">
+      <div class="col-3 text-end">
+        Gesamtsumme ({{this.quantity}} Artikel) : {{this.amount}} €
+        <hr>
+      </div>
+    </div>
+    <div class="text-end text-muted"> zzgl. Versandkosten</div>
+    <br/>
+    <div class="col text-end">
+      <button class="btn-sm btn-primary text-white rounded-pill"
+              style="font-weight: bold"
+              type="button"
+              (click)="onNavigateToOrderProcess()">
+        <span>Zahlen</span>
+        <img src="../../../assets/shopping_cart_checkout_white_opsz24.ico">
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyShoppingCart>
+  <alert type="warning">Der Warenkorb scheint leer zu sein!</alert>
+</ng-template>

@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col" style="font-size: xx-large">
+    Meine Wunschliste
+    <img src="../../../assets/favorite_opsz40.svg" type="heart"/>
+  </div>
+  <div class="col text-end">
+    <button (click)="onWishListDelete()"
+            (mouseleave)="showText=false"
+            (mouseover)="showText=true"
+            class="btn-sm btn-danger text-body rounded-pill"
+            style="font-weight: bold"
+            type="button">
+      <span *ngIf="showText">Wunschliste löschen</span>
+      <img src="../../../assets/delete.svg">
+    </button>
+  </div>
+</div>
+<div *ngIf="itemList.length != 0; else emptyWishlist">
+  <specified-item-list
+    (onDeleteEvent)="onItemDelete($event)"
+    (onQuantityChangeEvent)="onItemChange($event)"
+    [itemList]="itemList"
+    [showAddCartButton]="true">
+  </specified-item-list>
+</div>
+<ng-template #emptyWishlist>
+  <alert type="warning">Die Wunschliste scheint leer zu sein!</alert>
+</ng-template>
