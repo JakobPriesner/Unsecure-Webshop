@@ -16,7 +16,6 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
@@ -24,9 +23,6 @@
                             <mainClass>de.fhws.biedermann.webshop.Start</mainClass>
                         </manifest>
                     </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
                 </configuration>
         </plugin>
         </plugins>
