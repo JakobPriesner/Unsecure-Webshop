@@ -9,7 +9,7 @@ import javax.ws.rs.BadRequestException;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Task3 {
+public class TestOrderLogicForTask4 {
 
     @ParameterizedTest
     @CsvSource({
