@@ -43,7 +43,6 @@ import javax.ws.rs.core.UriInfo;
 		@DefaultValue( "false" ) @QueryParam("cleanUpWishlist") final boolean cleanup,
 		@HeaderParam("sessionid") String session,
 		@HeaderParam( "uuid" ) final String uuid,
-		@Context HttpServletRequest request,
 		final Order order
 	)
 	{
@@ -54,5 +53,12 @@ import javax.ws.rs.core.UriInfo;
 			.withUriInfo( OrderLogic.createOrder( cleanup, session, order, uriInfo ) )
 			.build()
 			.create();
+	}
+
+	@GET
+	public Response getShippingCost(
+			final Order order
+	) {
+		return Response.ok(OrderLogic.getShippingCosts( order.getSpecifiedItems().size(), order.getAddress().getCountry() ) ).build();
 	}
 }
