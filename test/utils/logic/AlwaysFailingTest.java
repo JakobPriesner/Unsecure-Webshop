@@ -10,4 +10,9 @@ public class AlwaysFailingTest {
     public void testFailing() {
         fail();
     }
+
+    @Test
+    public void testWorking(){
+        // do nothing
+    }
 }
