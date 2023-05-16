@@ -1,5 +1,3 @@
-package utils.logic;
-
 import de.fhws.biedermann.webshop.utils.logic.OrderLogic;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
