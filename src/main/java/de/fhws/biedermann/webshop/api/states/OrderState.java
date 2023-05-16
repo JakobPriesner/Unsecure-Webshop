@@ -2,7 +2,6 @@ package de.fhws.biedermann.webshop.api.states;
 
 import de.fhws.biedermann.webshop.models.ArticleVersion;
 import de.fhws.biedermann.webshop.models.Order;
-import de.fhws.biedermann.webshop.models.User;
 import de.fhws.biedermann.webshop.utils.handler.FlawHandler;
 
 import java.util.List;
