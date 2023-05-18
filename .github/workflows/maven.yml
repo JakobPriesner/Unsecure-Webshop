@@ -26,12 +26,3 @@ jobs:
 
       - name: Build and test with Maven
         run: mvn -B test --file pom.xml
-
-      - name: Archive test results
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: Test Reports
-          path: |
-            **/target/surefire-reports/TEST-*.xml
-            **/target/failsafe-reports/TEST-*.xml
